@@ -1,0 +1,12 @@
+# Taste
+- Prefers responses written in Chinese. Confidence: 0.7
+- Wants product UI text (labels, nav, statuses, copy) in Chinese only for now; English localization is a later concern, not to be built in yet ("将前端语言改成中文，以后才考虑添加英文版"). Confidence: 0.8
+- Wants continuous autonomous execution through the whole staged plan/todo list instead of pausing to ask for confirmation between stages ("持续运行，直到待办事项结束"). Confidence: 0.75
+- Expects bug fixes and new UI to be verified against the user's own reproduction and real state (the exact link/URL they reported, and empty/no-data states, not just a seeded happy path) before claiming it works — pushes back with "不对啊，还是这样" or "没看到星星啊" when a claimed fix or visual verification does not hold in their scenario. Confidence: 0.6
+- Prefers abstract, schematic/geometric visuals over realistic rendering: pushes back when a visualization gets too literal ("现在的银河太写实了，能不能帮我改的抽象一点") and accepts directions like concentric orbits, spokes and geometric nodes that drop soft glows, nebula gradients and random noise. Confidence: 0.55
+- Prefers a hard-edged, industrial look: explicitly rejects large border radii ("不要有半径那么大的圆弧") and wants corners tightened. Confidence: 0.85
+- Dislikes the generic "AI-looking" default web aesthetic; wants dark (night-mode) visual direction instead of light/default styling. Confidence: 0.6
+- Wants the primary working area (answer/editor) to dominate the screen; corrects layouts where it feels cramped ("作答区域太小了") toward problem-on-left / answer-on-right two-column splits. Confidence: 0.6
+- When adding new content/data, expects it conformed to the existing documented database structure (schema docs + migrations) rather than ad-hoc storage ("按照数据库结构，将内容添加到数据库中"). Confidence: 0.55
+- Wants transitions and overlays to feel seamless: no visible boundaries, drag handles, chevrons or hard cut lines — edges should fade into the layer below, and hit areas can stay invisible ("不要有明显的下拉边界，给用户无缝的感觉"). Confidence: 0.6
+- Does not accept "empty state = nothing visible": a zero-progress/empty screen should still show subdued but genuinely visible content (e.g. residual lit stars on an otherwise dim star map), not just a blank or uniformly dark canvas ("在恒星点亮之前也要有已经亮的恒星啊，只不过总体来看是很暗的"). Confidence: 0.55

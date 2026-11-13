@@ -1,0 +1,44 @@
+[
+  {
+    "slug": "basics",
+    "name": "基础算法",
+    "description": "二分、双指针、前缀和、差分等基础技巧。",
+    "sort_order": 10
+  },
+  {
+    "slug": "graph-search",
+    "name": "图论与搜索",
+    "description": "BFS、DFS、Dijkstra、并查集等图与搜索算法。",
+    "sort_order": 20
+  },
+  {
+    "slug": "dynamic-programming",
+    "name": "动态规划",
+    "description": "01 背包、LIS 等经典动态规划模型。",
+    "sort_order": 30
+  },
+  {
+    "slug": "data-structures",
+    "name": "数据结构",
+    "description": "树状数组、线段树、单调结构、可持久化与高级树结构。",
+    "sort_order": 40
+  },
+  {
+    "slug": "math-strings",
+    "name": "数学与字符串",
+    "description": "数论、组合计数、字符串匹配与多项式。",
+    "sort_order": 50
+  },
+  {
+    "slug": "advanced-graph",
+    "name": "高级图论",
+    "description": "一般图匹配、最小割树等金牌专题。",
+    "sort_order": 60
+  },
+  {
+    "slug": "geometry",
+    "name": "计算几何",
+    "description": "向量、凸包、扫描线与几何关系。",
+    "sort_order": 70
+  }
+]

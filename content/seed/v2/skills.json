@@ -1,0 +1,1269 @@
+[
+  {
+    "slug": "binary-search-recognition",
+    "algorithm_slug": "binary-search",
+    "name": "识别二分查找适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据有序性、单调性和答案可行性判断是否可以使用二分。",
+    "learning_objective": "看到有序数组、单调函数或可判定答案空间时，能判断可以使用二分。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略单调性；把二分用于无序数据；把二分答案误当成普通查找。",
+    "prerequisites": [
+      "数组与循环"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "binary-search-template",
+    "algorithm_slug": "binary-search",
+    "name": "独立复现二分模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出 lower_bound 风格的二分模板。",
+    "learning_objective": "能写出区间开闭一致、边界更新正确的二分查找。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "mid 计算溢出；l/r 更新导致死循环；返回值差一。",
+    "prerequisites": [
+      "识别二分查找适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "binary-search-variant",
+    "algorithm_slug": "binary-search",
+    "name": "二分答案与边界变体",
+    "skill_type": "variant",
+    "description_md": "把最优化问题转化为判定问题，在答案空间上二分。",
+    "learning_objective": "能定义单调判定函数，并正确设置答案上下界。",
+    "mastery_evidence_md": "完成二分答案变体任务，并能解释判定函数的单调性。",
+    "common_mistakes_md": "判定函数不单调；答案区间开闭错误；最小/最大可行值方向写反。",
+    "prerequisites": [
+      "独立复现二分模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "binary-search-errors",
+    "algorithm_slug": "binary-search",
+    "name": "二分边界与死循环纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复二分中的边界、溢出和终止条件错误。",
+    "learning_objective": "能识别 l=mid 不收敛、mid 溢出、返回值混淆等常见错误。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并给出可通过的修复。",
+    "common_mistakes_md": "l=mid 不收敛；int mid 溢出；返回 l/r 混淆。",
+    "prerequisites": [
+      "独立复现二分模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "two-pointers-recognition",
+    "algorithm_slug": "two-pointers",
+    "name": "识别双指针适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据有序性、区间单调性或链表结构判断双指针是否适用。",
+    "learning_objective": "能区分对撞指针、快慢指针和滑动窗口的适用条件。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明指针移动的单调性。",
+    "common_mistakes_md": "在无序数据上强行双指针；把滑动窗口用于不满足单调性的区间。",
+    "prerequisites": [
+      "数组与循环"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "two-pointers-template",
+    "algorithm_slug": "two-pointers",
+    "name": "独立复现对撞双指针模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现左右指针向中间移动的标准模板。",
+    "learning_objective": "能写出 l/r 移动条件清晰、终止正确的双指针模板。",
+    "mastery_evidence_md": "无提示完成两数之和、回文判断等基础任务。",
+    "common_mistakes_md": "移动条件写反；忘记移动指针导致死循环；去重遗漏。",
+    "prerequisites": [
+      "识别双指针适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "two-pointers-variant",
+    "algorithm_slug": "two-pointers",
+    "name": "快慢指针与区间收缩变体",
+    "skill_type": "variant",
+    "description_md": "处理链表环、删除重复、区间收缩等双指针变体。",
+    "learning_objective": "能根据问题结构选择快慢指针或区间收缩策略。",
+    "mastery_evidence_md": "完成快慢指针或区间收缩变体，并说明终止条件。",
+    "common_mistakes_md": "快慢指针步长错误；区间收缩条件错误；边界遗漏。",
+    "prerequisites": [
+      "独立复现对撞双指针模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "two-pointers-errors",
+    "algorithm_slug": "two-pointers",
+    "name": "指针移动与去重纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复双指针中的死循环、越界和重复答案。",
+    "learning_objective": "能识别指针未移动、越界访问和去重逻辑错误。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "忘记移动指针；越界；重复答案未跳过。",
+    "prerequisites": [
+      "独立复现对撞双指针模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "prefix-sum-recognition",
+    "algorithm_slug": "prefix-sum",
+    "name": "识别前缀和适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据静态数组、多次区间查询判断是否使用前缀和。",
+    "learning_objective": "能区分前缀和与线段树/树状数组的适用场景。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明预处理与查询复杂度。",
+    "common_mistakes_md": "对频繁修改的数组误用前缀和；把区间和与子数组和混淆。",
+    "prerequisites": [
+      "数组与循环"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "prefix-sum-template",
+    "algorithm_slug": "prefix-sum",
+    "name": "独立复现一维前缀和模板",
+    "skill_type": "base_implementation",
+    "description_md": "构造 prefix[i+1]=prefix[i]+a[i] 并支持区间查询。",
+    "learning_objective": "能写出下标偏移正确、边界安全的一维前缀和。",
+    "mastery_evidence_md": "无提示完成区间和查询任务。",
+    "common_mistakes_md": "下标偏移；区间端点错误；prefix[0] 未初始化。",
+    "prerequisites": [
+      "识别前缀和适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "prefix-sum-variant",
+    "algorithm_slug": "prefix-sum",
+    "name": "二维前缀和与哈希变体",
+    "skill_type": "variant",
+    "description_md": "处理子矩阵和、和为 k 的子数组等前缀和变体。",
+    "learning_objective": "能正确使用容斥或前缀和 + 哈希解决变体。",
+    "mastery_evidence_md": "完成二维前缀和或子数组和变体，并解释公式。",
+    "common_mistakes_md": "容斥符号错误；哈希初始化遗漏；重复计数。",
+    "prerequisites": [
+      "独立复现一维前缀和模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "prefix-sum-errors",
+    "algorithm_slug": "prefix-sum",
+    "name": "下标与前缀初始化纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复前缀和中的 off-by-one 与初始化错误。",
+    "learning_objective": "能识别前缀数组长度、查询区间和初始化问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "从 0 开始构造；查询区间开闭错误；prefix[0] 未置 0。",
+    "prerequisites": [
+      "独立复现一维前缀和模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "difference-array-recognition",
+    "algorithm_slug": "difference-array",
+    "name": "识别差分适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据多次区间加减、最后统一查询判断是否使用差分。",
+    "learning_objective": "能区分差分与线段树的适用条件。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明端点到前缀还原的流程。",
+    "common_mistakes_md": "对在线查询误用差分；忘记还原前缀。",
+    "prerequisites": [
+      "前缀和"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "difference-array-template",
+    "algorithm_slug": "difference-array",
+    "name": "独立复现一维差分模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现 diff[l]+=v、diff[r+1]-=v 与前缀还原。",
+    "learning_objective": "能写出边界安全的一维差分模板。",
+    "mastery_evidence_md": "无提示完成多次区间加、最后输出数组的任务。",
+    "common_mistakes_md": "r+1 越界；忘记前缀还原；边界未预留。",
+    "prerequisites": [
+      "识别差分适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "difference-array-variant",
+    "algorithm_slug": "difference-array",
+    "name": "二维差分与区间修改变体",
+    "skill_type": "variant",
+    "description_md": "处理子矩阵加减等二维差分区修改变体。",
+    "learning_objective": "能正确写出二维差分的四个角修改与容斥还原。",
+    "mastery_evidence_md": "完成二维差分任务，并解释四个角符号。",
+    "common_mistakes_md": "四个角符号错误；边界越界；还原顺序错误。",
+    "prerequisites": [
+      "独立复现一维差分模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "difference-array-errors",
+    "algorithm_slug": "difference-array",
+    "name": "差分边界与还原纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复差分中的 r+1 越界和前缀还原错误。",
+    "learning_objective": "能识别差分数组长度、边界和还原顺序问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "r+1 越界；还原顺序错；边界未开够。",
+    "prerequisites": [
+      "独立复现一维差分模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "bfs-recognition",
+    "algorithm_slug": "bfs",
+    "name": "识别 BFS 适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据无权图、网格最短步数、按层扩展判断是否使用 BFS。",
+    "learning_objective": "能区分 BFS 与 DFS、Dijkstra 的适用条件。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明为何 BFS 第一次到达即最短。",
+    "common_mistakes_md": "对带权图误用 BFS；把连通性问题误判为最短路。",
+    "prerequisites": [
+      "队列",
+      "图的基本表示"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "bfs-template",
+    "algorithm_slug": "bfs",
+    "name": "独立复现队列 BFS 模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现队列、visited 标记与层数统计的 BFS 模板。",
+    "learning_objective": "能写出入队即标记、层数正确的 BFS。",
+    "mastery_evidence_md": "无提示完成网格最短步数任务。",
+    "common_mistakes_md": "出队才标记导致重复入队；层数统计错误；边界遗漏。",
+    "prerequisites": [
+      "识别 BFS 适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "bfs-variant",
+    "algorithm_slug": "bfs",
+    "name": "多源 BFS 与路径恢复变体",
+    "skill_type": "variant",
+    "description_md": "处理多起点、01 矩阵最近距离、路径恢复等 BFS 变体。",
+    "learning_objective": "能正确初始化多源队列并维护父节点或距离。",
+    "mastery_evidence_md": "完成多源 BFS 或路径恢复变体。",
+    "common_mistakes_md": "多源初始化遗漏；父节点更新错误；距离数组初值错误。",
+    "prerequisites": [
+      "独立复现队列 BFS 模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "bfs-errors",
+    "algorithm_slug": "bfs",
+    "name": "visited 时机与层数纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复 BFS 中的重复入队、层数与边界错误。",
+    "learning_objective": "能识别 visited 标记时机和层数推进的问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "出队才标记；level 混用；越界未检查。",
+    "prerequisites": [
+      "独立复现队列 BFS 模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "dfs-recognition",
+    "algorithm_slug": "dfs",
+    "name": "识别 DFS 适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据连通性、环检测、回溯枚举判断是否使用 DFS。",
+    "learning_objective": "能区分 DFS 与 BFS 的适用条件。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明递归深入的理由。",
+    "common_mistakes_md": "对无权最短路误用 DFS；忽略递归深度。",
+    "prerequisites": [
+      "递归",
+      "图的基本表示"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "dfs-template",
+    "algorithm_slug": "dfs",
+    "name": "独立复现递归 DFS 模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现 visited、递归边界与回溯恢复的 DFS 模板。",
+    "learning_objective": "能写出边界清晰、状态可恢复的递归 DFS。",
+    "mastery_evidence_md": "无提示完成连通块或回溯任务。",
+    "common_mistakes_md": "忘记恢复现场；递归边界缺失；重复访问。",
+    "prerequisites": [
+      "识别 DFS 适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "dfs-variant",
+    "algorithm_slug": "dfs",
+    "name": "连通块、记忆化与剪枝变体",
+    "skill_type": "variant",
+    "description_md": "处理网格连通块、记忆化搜索和回溯剪枝等变体。",
+    "learning_objective": "能根据状态选择记忆化或剪枝策略。",
+    "mastery_evidence_md": "完成连通块或记忆化变体，并说明剪枝正确性。",
+    "common_mistakes_md": "重复搜索；剪枝条件过强；状态未缓存。",
+    "prerequisites": [
+      "独立复现递归 DFS 模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "dfs-errors",
+    "algorithm_slug": "dfs",
+    "name": "递归边界与回溯纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复 DFS 中的死递归、未恢复状态和越界。",
+    "learning_objective": "能识别递归终止、访问标记和回溯恢复问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "边界缺失；全局状态污染；未标记访问。",
+    "prerequisites": [
+      "独立复现递归 DFS 模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "dijkstra-recognition",
+    "algorithm_slug": "dijkstra",
+    "name": "识别 Dijkstra 适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据非负边权、单源最短路判断是否使用 Dijkstra。",
+    "learning_objective": "能区分 Dijkstra、BFS 与 Bellman-Ford 的适用条件。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明非负边权的前提。",
+    "common_mistakes_md": "负权图误用 Dijkstra；带权图误用 BFS。",
+    "prerequisites": [
+      "优先队列",
+      "图的邻接表"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "dijkstra-template",
+    "algorithm_slug": "dijkstra",
+    "name": "独立复现优先队列 Dijkstra 模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现 dist 数组、优先队列和松弛操作。",
+    "learning_objective": "能写出正确处理过期堆元素的 Dijkstra。",
+    "mastery_evidence_md": "无提示完成单源最短路任务。",
+    "common_mistakes_md": "未跳过过期堆元素；dist 初始化错误；松弛条件写反。",
+    "prerequisites": [
+      "识别 Dijkstra 适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "dijkstra-variant",
+    "algorithm_slug": "dijkstra",
+    "name": "多源、路径恢复与次短路变体",
+    "skill_type": "variant",
+    "description_md": "处理多源最短路、路径恢复和次短路等变体。",
+    "learning_objective": "能维护父节点或多状态距离解决变体。",
+    "mastery_evidence_md": "完成路径恢复或多源最短路变体。",
+    "common_mistakes_md": "父节点更新错误；多源初始化遗漏；次短路状态遗漏。",
+    "prerequisites": [
+      "独立复现优先队列 Dijkstra 模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "dijkstra-errors",
+    "algorithm_slug": "dijkstra",
+    "name": "松弛与堆过期纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复 Dijkstra 中的松弛、堆过期和初始化错误。",
+    "learning_objective": "能识别未更新 dist、重复处理和无穷大溢出问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "松弛条件写反；堆元素未校验；INF 加法溢出。",
+    "prerequisites": [
+      "独立复现优先队列 Dijkstra 模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "union-find-recognition",
+    "algorithm_slug": "union-find",
+    "name": "识别并查集适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据动态合并、连通性查询判断是否使用并查集。",
+    "learning_objective": "能区分并查集与图遍历、线段树的适用条件。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明合并与查询的语义。",
+    "common_mistakes_md": "需要删边或路径查询时误用并查集。",
+    "prerequisites": [
+      "数组",
+      "树的父指针"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "union-find-template",
+    "algorithm_slug": "union-find",
+    "name": "独立复现路径压缩并查集模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现 find 路径压缩与 union 按秩合并。",
+    "learning_objective": "能写出 find/union 正确、复杂度达标的模板。",
+    "mastery_evidence_md": "无提示完成动态连通性任务。",
+    "common_mistakes_md": "find 未压缩；union 未比较秩；父节点未更新。",
+    "prerequisites": [
+      "识别并查集适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "union-find-variant",
+    "algorithm_slug": "union-find",
+    "name": "带权并查集与连通块计数变体",
+    "skill_type": "variant",
+    "description_md": "维护集合大小、权值或连通块数量的并查集变体。",
+    "learning_objective": "能在合并时正确维护附加信息。",
+    "mastery_evidence_md": "完成带权并查集或连通块计数变体。",
+    "common_mistakes_md": "权值更新错误；size 合并错误；根节点信息未同步。",
+    "prerequisites": [
+      "独立复现路径压缩并查集模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "union-find-errors",
+    "algorithm_slug": "union-find",
+    "name": "find 递归与合并纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复并查集中的死循环、父节点和合并错误。",
+    "learning_objective": "能识别 find 未返回根、union 方向错误等问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "find 未返回根；union 未比较秩；路径压缩遗漏。",
+    "prerequisites": [
+      "独立复现路径压缩并查集模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "knapsack-01-recognition",
+    "algorithm_slug": "knapsack-01",
+    "name": "识别 01 背包适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据每件物品最多选一次、容量限制判断 01 背包。",
+    "learning_objective": "能区分 01 背包、完全背包和多重背包。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明“选或不选”的状态。",
+    "common_mistakes_md": "与完全背包混淆；忽略每件物品只能选一次。",
+    "prerequisites": [
+      "动态规划基础"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "knapsack-01-template",
+    "algorithm_slug": "knapsack-01",
+    "name": "独立复现一维 01 背包模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现容量倒序遍历的一维 01 背包。",
+    "learning_objective": "能写出一维滚动数组且不重复选物品的模板。",
+    "mastery_evidence_md": "无提示完成基础 01 背包任务。",
+    "common_mistakes_md": "容量正序遍历导致重复选；边界未处理。",
+    "prerequisites": [
+      "识别 01 背包适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "knapsack-01-variant",
+    "algorithm_slug": "knapsack-01",
+    "name": "恰好装满、方案数与路径恢复变体",
+    "skill_type": "variant",
+    "description_md": "处理恰好装满、方案计数和选择路径恢复等变体。",
+    "learning_objective": "能正确设计初始化、计数去重与路径恢复。",
+    "mastery_evidence_md": "完成恰好装满或方案数变体。",
+    "common_mistakes_md": "初始化错误；方案重复计数；路径恢复遗漏。",
+    "prerequisites": [
+      "独立复现一维 01 背包模板"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "knapsack-01-errors",
+    "algorithm_slug": "knapsack-01",
+    "name": "容量循环方向纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复 01 背包中正序循环、初始化错误。",
+    "learning_objective": "能识别完全背包写法误用和 dp 初始化问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "容量正序；dp[0] 未初始化；负无穷使用错误。",
+    "prerequisites": [
+      "独立复现一维 01 背包模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "lis-recognition",
+    "algorithm_slug": "lis",
+    "name": "识别 LIS 适用场景",
+    "skill_type": "recognition",
+    "description_md": "根据子序列、顺序保持和最长判断是否使用 LIS。",
+    "learning_objective": "能区分子序列与子数组，并判断 LIS 模型。",
+    "mastery_evidence_md": "识别任务连续正确，且能说明状态定义。",
+    "common_mistakes_md": "与子数组/子串混淆；忽略顺序保持。",
+    "prerequisites": [
+      "动态规划基础"
+    ],
+    "sort_order": 10
+  },
+  {
+    "slug": "lis-template",
+    "algorithm_slug": "lis",
+    "name": "独立复现 O(n^2) LIS 模板",
+    "skill_type": "base_implementation",
+    "description_md": "实现 dp[i]=max(dp[j]+1) 的基础 LIS。",
+    "learning_objective": "能写出状态、转移和初始化正确的 O(n^2) LIS。",
+    "mastery_evidence_md": "无提示完成基础 LIS 任务。",
+    "common_mistakes_md": "比较条件错误；dp 初始化错误；答案未取最大值。",
+    "prerequisites": [
+      "识别 LIS 适用场景"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "lis-variant",
+    "algorithm_slug": "lis",
+    "name": "O(n log n) 二分与路径恢复变体",
+    "skill_type": "variant",
+    "description_md": "用 tails 数组和二分实现 O(n log n) LIS，并处理路径恢复。",
+    "learning_objective": "能正确维护 tails 数组并选择 lower_bound/upper_bound。",
+    "mastery_evidence_md": "完成 O(n log n) LIS 或路径恢复变体。",
+    "common_mistakes_md": "替换位置错误；严格/非严格混淆；路径恢复索引错误。",
+    "prerequisites": [
+      "独立复现 O(n^2) LIS 模板",
+      "二分查找"
+    ],
+    "sort_order": 30
+  },
+  {
+    "slug": "lis-errors",
+    "algorithm_slug": "lis",
+    "name": "状态定义与二分替换纠错",
+    "skill_type": "common_error",
+    "description_md": "定位并修复 LIS 中的状态混淆、替换和边界错误。",
+    "learning_objective": "能识别 dp 含义混用、tails 更新错误和二分边界问题。",
+    "mastery_evidence_md": "纠错任务中正确定位错误并修复。",
+    "common_mistakes_md": "dp 含义混用；lower_bound/upper_bound 混用；答案长度错误。",
+    "prerequisites": [
+      "独立复现 O(n^2) LIS 模板"
+    ],
+    "sort_order": 40
+  },
+  {
+    "slug": "fenwick-recognition",
+    "algorithm_slug": "fenwick",
+    "name": "识别树状数组 Fenwick适用场景",
+    "skill_type": "recognition",
+    "description_md": "单点加、前缀和、区间和；逆序对；动态频率统计；支持按前缀和查找第\n k 个元素（要求频率非负）。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用树状数组 Fenwick。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略树状数组 Fenwick的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "fenwick-template",
+    "algorithm_slug": "fenwick",
+    "name": "独立复现树状数组 Fenwick模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出树状数组 Fenwick的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的树状数组 Fenwick实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "fenwick-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "kruskal-mst-recognition",
+    "algorithm_slug": "kruskal-mst",
+    "name": "识别Kruskal 最小生成树适用场景",
+    "skill_type": "recognition",
+    "description_md": "DFS/BFS 求连通性、层数、遍历序；Kruskal\n 求连通所有点的最小总边权。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用Kruskal 最小生成树。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略Kruskal 最小生成树的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "kruskal-mst-template",
+    "algorithm_slug": "kruskal-mst",
+    "name": "独立复现Kruskal 最小生成树模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出Kruskal 最小生成树的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的Kruskal 最小生成树实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "kruskal-mst-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "greedy-recognition",
+    "algorithm_slug": "greedy",
+    "name": "识别贪心适用场景",
+    "skill_type": "recognition",
+    "description_md": "在满足交换性质或其他正确性证明的前提下，每一步选择局部最优决策。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用贪心。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略贪心的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "greedy-template",
+    "algorithm_slug": "greedy",
+    "name": "独立复现贪心模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出贪心的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的贪心实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "greedy-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "backtracking-recognition",
+    "algorithm_slug": "backtracking",
+    "name": "识别回溯与基础搜索适用场景",
+    "skill_type": "recognition",
+    "description_md": "状态空间遍历、连通块、网格最短步数、枚举组合与剪枝。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用回溯与基础搜索。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略回溯与基础搜索的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "backtracking-template",
+    "algorithm_slug": "backtracking",
+    "name": "独立复现回溯与基础搜索模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出回溯与基础搜索的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的回溯与基础搜索实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "backtracking-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "number-theory-basics-recognition",
+    "algorithm_slug": "number-theory-basics",
+    "name": "识别基础数论适用场景",
+    "skill_type": "recognition",
+    "description_md": "最大公约数、模幂、素数判定/预处理、组合计数。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用基础数论。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略基础数论的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "number-theory-basics-template",
+    "algorithm_slug": "number-theory-basics",
+    "name": "独立复现基础数论模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出基础数论的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的基础数论实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "number-theory-basics-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "string-algorithms-recognition",
+    "algorithm_slug": "string-algorithms",
+    "name": "识别KMP、Trie 与字符串哈希适用场景",
+    "skill_type": "recognition",
+    "description_md": "KMP 在线性时间匹配模式串；Trie\n 维护字符串集合前缀；哈希快速比较子串（存在碰撞风险）。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用KMP、Trie 与字符串哈希。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略KMP、Trie 与字符串哈希的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "string-algorithms-template",
+    "algorithm_slug": "string-algorithms",
+    "name": "独立复现KMP、Trie 与字符串哈希模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出KMP、Trie 与字符串哈希的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的KMP、Trie 与字符串哈希实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "string-algorithms-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "coordinate-compression-recognition",
+    "algorithm_slug": "coordinate-compression",
+    "name": "识别离散化适用场景",
+    "skill_type": "recognition",
+    "description_md": "把稀疏的大值域映射为连续下标；压缩坐标后使用数组、BIT、线段树。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用离散化。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略离散化的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "coordinate-compression-template",
+    "algorithm_slug": "coordinate-compression",
+    "name": "独立复现离散化模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出离散化的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的离散化实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "coordinate-compression-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "segment-tree-recognition",
+    "algorithm_slug": "segment-tree",
+    "name": "识别线段树与懒标记适用场景",
+    "skill_type": "recognition",
+    "description_md": "动态维护区间信息；区间求和/最大值/最小值；单点修改、区间修改。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用线段树与懒标记。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略线段树与懒标记的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "segment-tree-template",
+    "algorithm_slug": "segment-tree",
+    "name": "独立复现线段树与懒标记模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出线段树与懒标记的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的线段树与懒标记实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "segment-tree-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "monotonic-structures-recognition",
+    "algorithm_slug": "monotonic-structures",
+    "name": "识别RMQ、单调栈与单调队列适用场景",
+    "skill_type": "recognition",
+    "description_md": "静态区间最值查询；求每个元素左右第一个更大/更小元素；滑动窗口最值。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用RMQ、单调栈与单调队列。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略RMQ、单调栈与单调队列的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "monotonic-structures-template",
+    "algorithm_slug": "monotonic-structures",
+    "name": "独立复现RMQ、单调栈与单调队列模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出RMQ、单调栈与单调队列的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的RMQ、单调栈与单调队列实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "monotonic-structures-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "rollback-dsu-recognition",
+    "algorithm_slug": "rollback-dsu",
+    "name": "识别可撤销并查集适用场景",
+    "skill_type": "recognition",
+    "description_md": "离线分治、时间线段树、动态连通性；需要回滚合并状态而不是永久修改。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用可撤销并查集。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略可撤销并查集的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "rollback-dsu-template",
+    "algorithm_slug": "rollback-dsu",
+    "name": "独立复现可撤销并查集模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出可撤销并查集的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的可撤销并查集实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "rollback-dsu-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "scc-recognition",
+    "algorithm_slug": "scc",
+    "name": "识别强连通分量 SCC适用场景",
+    "skill_type": "recognition",
+    "description_md": "有向图中互相可达的极大点集；缩点后得到\n DAG，处理依赖、环、可达性与 DAG DP。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用强连通分量 SCC。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略强连通分量 SCC的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "scc-template",
+    "algorithm_slug": "scc",
+    "name": "独立复现强连通分量 SCC模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出强连通分量 SCC的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的强连通分量 SCC实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "scc-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "two-sat-recognition",
+    "algorithm_slug": "two-sat",
+    "name": "识别2-SAT适用场景",
+    "skill_type": "recognition",
+    "description_md": "每个变量只能取真/假，约束可转化为二元蕴含；判断是否存在满足所有约束的赋值。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用2-SAT。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略2-SAT的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "two-sat-template",
+    "algorithm_slug": "two-sat",
+    "name": "独立复现2-SAT模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出2-SAT的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的2-SAT实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "two-sat-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "lca-hld-recognition",
+    "algorithm_slug": "lca-hld",
+    "name": "识别LCA 与树链剖分适用场景",
+    "skill_type": "recognition",
+    "description_md": "LCA 求树上两点最近公共祖先；HLD 把树路径拆成 `O(log n)`\n 条连续区间，配合线段树维护路径信息。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用LCA 与树链剖分。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略LCA 与树链剖分的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "lca-hld-template",
+    "algorithm_slug": "lca-hld",
+    "name": "独立复现LCA 与树链剖分模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出LCA 与树链剖分的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的LCA 与树链剖分实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "lca-hld-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "bipartite-matching-recognition",
+    "algorithm_slug": "bipartite-matching",
+    "name": "识别二分图匹配适用场景",
+    "skill_type": "recognition",
+    "description_md": "二分图匹配解决两侧对象的一对一分配；最大流解决容量网络中的最大可传输量。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用二分图匹配。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略二分图匹配的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "bipartite-matching-template",
+    "algorithm_slug": "bipartite-matching",
+    "name": "独立复现二分图匹配模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出二分图匹配的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的二分图匹配实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "bipartite-matching-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "network-flow-recognition",
+    "algorithm_slug": "network-flow",
+    "name": "识别网络流适用场景",
+    "skill_type": "recognition",
+    "description_md": "最大流处理容量约束；最小费用最大流处理单位流量带费用的分配/运输。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用网络流。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略网络流的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "network-flow-template",
+    "algorithm_slug": "network-flow",
+    "name": "独立复现网络流模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出网络流的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的网络流实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "network-flow-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "interval-dp-recognition",
+    "algorithm_slug": "interval-dp",
+    "name": "识别区间 DP、树形 DP 与状压 DP适用场景",
+    "skill_type": "recognition",
+    "description_md": "区间 DP 合并相邻子区间；树形 DP 在子树间合并状态；状压 DP\n 用 bitmask 表示小规模集合状态。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用区间 DP、树形 DP 与状压 DP。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略区间 DP、树形 DP 与状压 DP的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "interval-dp-template",
+    "algorithm_slug": "interval-dp",
+    "name": "独立复现区间 DP、树形 DP 与状压 DP模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出区间 DP、树形 DP 与状压 DP的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的区间 DP、树形 DP 与状压 DP实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "interval-dp-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "mo-cdq-recognition",
+    "algorithm_slug": "mo-cdq",
+    "name": "识别莫队、分治与 CDQ适用场景",
+    "skill_type": "recognition",
+    "description_md": "莫队离线处理区间询问；CDQ\n 分治解决带时间/偏序关系的离线贡献；整体二分处理可二分答案的批量询问。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用莫队、分治与 CDQ。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略莫队、分治与 CDQ的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "mo-cdq-template",
+    "algorithm_slug": "mo-cdq",
+    "name": "独立复现莫队、分治与 CDQ模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出莫队、分治与 CDQ的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的莫队、分治与 CDQ实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "mo-cdq-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "advanced-number-theory-recognition",
+    "algorithm_slug": "advanced-number-theory",
+    "name": "识别进阶数论适用场景",
+    "skill_type": "recognition",
+    "description_md": "线性丢番图方程、模意义除法、互质计数、整除函数反演、大整数分解与素性测试。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用进阶数论。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略进阶数论的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "advanced-number-theory-template",
+    "algorithm_slug": "advanced-number-theory",
+    "name": "独立复现进阶数论模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出进阶数论的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的进阶数论实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "advanced-number-theory-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "advanced-strings-recognition",
+    "algorithm_slug": "advanced-strings",
+    "name": "识别进阶字符串适用场景",
+    "skill_type": "recognition",
+    "description_md": "线性求前缀匹配；最长回文子串；后缀排序与子串比较；多模式串匹配；统计不同子串与回文子串。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用进阶字符串。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略进阶字符串的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "advanced-strings-template",
+    "algorithm_slug": "advanced-strings",
+    "name": "独立复现进阶字符串模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出进阶字符串的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的进阶字符串实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "advanced-strings-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "persistent-segment-tree-recognition",
+    "algorithm_slug": "persistent-segment-tree",
+    "name": "识别可持久化线段树适用场景",
+    "skill_type": "recognition",
+    "description_md": "保留历史版本，支持查询过去某一版本；主席树常用于区间第 k\n 小、历史版本统计。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用可持久化线段树。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略可持久化线段树的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "persistent-segment-tree-template",
+    "algorithm_slug": "persistent-segment-tree",
+    "name": "独立复现可持久化线段树模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出可持久化线段树的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的可持久化线段树实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "persistent-segment-tree-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "balanced-bst-recognition",
+    "algorithm_slug": "balanced-bst",
+    "name": "识别平衡树：Splay / Treap适用场景",
+    "skill_type": "recognition",
+    "description_md": "动态维护有序集合，支持插入、删除、排名、第 k\n 小、前驱后继。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用平衡树：Splay / Treap。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略平衡树：Splay / Treap的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "balanced-bst-template",
+    "algorithm_slug": "balanced-bst",
+    "name": "独立复现平衡树：Splay / Treap模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出平衡树：Splay / Treap的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的平衡树：Splay / Treap实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "balanced-bst-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "link-cut-tree-recognition",
+    "algorithm_slug": "link-cut-tree",
+    "name": "识别Link-Cut Tree适用场景",
+    "skill_type": "recognition",
+    "description_md": "动态森林，支持连接、断开、查询路径信息；边动态变化时维护树路径。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用Link-Cut Tree。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略Link-Cut Tree的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "link-cut-tree-template",
+    "algorithm_slug": "link-cut-tree",
+    "name": "独立复现Link-Cut Tree模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出Link-Cut Tree的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的Link-Cut Tree实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "link-cut-tree-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "general-graph-matching-recognition",
+    "algorithm_slug": "general-graph-matching",
+    "name": "识别一般图最大匹配 / Blossom适用场景",
+    "skill_type": "recognition",
+    "description_md": "一般图（不要求二分图）最大匹配或带权匹配；处理奇环导致的增广路收缩。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用一般图最大匹配 / Blossom。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略一般图最大匹配 / Blossom的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "general-graph-matching-template",
+    "algorithm_slug": "general-graph-matching",
+    "name": "独立复现一般图最大匹配 / Blossom模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出一般图最大匹配 / Blossom的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的一般图最大匹配 / Blossom实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "general-graph-matching-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "min-cut-tree-recognition",
+    "algorithm_slug": "min-cut-tree",
+    "name": "识别最小割与最小割树适用场景",
+    "skill_type": "recognition",
+    "description_md": "最小割刻画网络脆弱性；最小割树（Gomory--Hu\n Tree）回答无向图任意两点最小割值。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用最小割与最小割树。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略最小割与最小割树的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "min-cut-tree-template",
+    "algorithm_slug": "min-cut-tree",
+    "name": "独立复现最小割与最小割树模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出最小割与最小割树的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的最小割与最小割树实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "min-cut-tree-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "dp-optimization-recognition",
+    "algorithm_slug": "dp-optimization",
+    "name": "识别高级 DP 优化适用场景",
+    "skill_type": "recognition",
+    "description_md": "把朴素高复杂度转化为单调队列、凸包、分治或状态压缩优化。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用高级 DP 优化。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略高级 DP 优化的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "dp-optimization-template",
+    "algorithm_slug": "dp-optimization",
+    "name": "独立复现高级 DP 优化模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出高级 DP 优化的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的高级 DP 优化实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "dp-optimization-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "ntt-recognition",
+    "algorithm_slug": "ntt",
+    "name": "识别多项式与生成函数适用场景",
+    "skill_type": "recognition",
+    "description_md": "快速卷积、组合计数、递推加速与大规模系数运算。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用多项式与生成函数。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略多项式与生成函数的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "ntt-template",
+    "algorithm_slug": "ntt",
+    "name": "独立复现多项式与生成函数模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出多项式与生成函数的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的多项式与生成函数实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "ntt-recognition"
+    ],
+    "sort_order": 20
+  },
+  {
+    "slug": "computational-geometry-recognition",
+    "algorithm_slug": "computational-geometry",
+    "name": "识别计算几何与扫描线适用场景",
+    "skill_type": "recognition",
+    "description_md": "平面位置关系、面积/周长、最远点对、覆盖面积、几何可行性。",
+    "learning_objective": "看到相关题目特征时，能判断可以使用计算几何与扫描线。",
+    "mastery_evidence_md": "识别任务连续正确，且最高提示等级不超过 1。",
+    "common_mistakes_md": "忽略计算几何与扫描线的适用前提；把模板套到不满足条件的问题上。",
+    "prerequisites": [],
+    "sort_order": 10
+  },
+  {
+    "slug": "computational-geometry-template",
+    "algorithm_slug": "computational-geometry",
+    "name": "独立复现计算几何与扫描线模板",
+    "skill_type": "base_implementation",
+    "description_md": "不看参考代码写出计算几何与扫描线的核心模板。",
+    "learning_objective": "能写出边界、初始化与复杂度正确的计算几何与扫描线实现。",
+    "mastery_evidence_md": "无提示或仅 1 级提示完成模板，并通过自评或 OJ 关联。",
+    "common_mistakes_md": "边界与初始化错误；循环顺序或状态转移写反；未验证样例。",
+    "prerequisites": [
+      "computational-geometry-recognition"
+    ],
+    "sort_order": 20
+  }
+]

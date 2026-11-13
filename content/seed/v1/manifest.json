@@ -1,0 +1,10 @@
+{
+  "version": "2026.11.2",
+  "description": "MomoCode 算法内容：10 个算法、40 个技能、40 个训练任务，每个算法覆盖识别、模板、变体、纠错四类训练。",
+  "files": [
+    "categories.json",
+    "algorithms.json",
+    "skills.json",
+    "tasks.json"
+  ]
+}

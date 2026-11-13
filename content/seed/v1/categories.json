@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "basics",
+    "name": "基础算法",
+    "description": "二分、双指针、前缀和、差分等基础技巧。",
+    "sort_order": 10
+  },
+  {
+    "slug": "graph-search",
+    "name": "图论与搜索",
+    "description": "BFS、DFS、Dijkstra、并查集等图与搜索算法。",
+    "sort_order": 20
+  },
+  {
+    "slug": "dynamic-programming",
+    "name": "动态规划",
+    "description": "01 背包、LIS 等经典动态规划模型。",
+    "sort_order": 30
+  }
+]

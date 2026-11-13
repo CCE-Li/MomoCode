@@ -1,0 +1,10 @@
+{
+  "version": "2026.11.4",
+  "description": "MomoCode 算法内容 v2：在 v1 基础上导入 ICPC/CCPC 手册的 32 个知识章节、模板与 OJ 题目；当前共 37 个算法、94 个技能、200 个训练任务。",
+  "files": [
+    "categories.json",
+    "algorithms.json",
+    "skills.json",
+    "tasks.json"
+  ]
+}

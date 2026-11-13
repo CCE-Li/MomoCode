@@ -1,0 +1,92 @@
+[
+  {
+    "slug": "binary-search",
+    "category_slug": "basics",
+    "name": "二分查找",
+    "summary": "在有序区间或单调答案空间中折半缩小范围。",
+    "description_md": "二分查找依赖单调性。它既可以用于有序数组查找，也可以把最优化问题转化为判定问题，在答案空间上二分。",
+    "difficulty": 1,
+    "prerequisites": ["数组与循环", "区间开闭概念"]
+  },
+  {
+    "slug": "two-pointers",
+    "category_slug": "basics",
+    "name": "双指针",
+    "summary": "用两个指针维护区间或相对位置，线性扫描。",
+    "description_md": "双指针常用于有序数组、链表、滑动窗口与去重。关键是指针移动的单调性与终止条件。",
+    "difficulty": 2,
+    "prerequisites": ["数组与循环", "单调性"]
+  },
+  {
+    "slug": "prefix-sum",
+    "category_slug": "basics",
+    "name": "前缀和",
+    "summary": "用前缀累积把区间查询降为 O(1)。",
+    "description_md": "前缀和适合静态数组的多次区间求和；二维前缀和通过容斥处理子矩阵和。",
+    "difficulty": 1,
+    "prerequisites": ["数组与循环"]
+  },
+  {
+    "slug": "difference-array",
+    "category_slug": "basics",
+    "name": "差分",
+    "summary": "用差分数组把区间加减转化为端点修改。",
+    "description_md": "差分适合多次区间加减、最后统一查询的场景；二维差分用于子矩阵修改。",
+    "difficulty": 2,
+    "prerequisites": ["数组与循环", "前缀和"]
+  },
+  {
+    "slug": "bfs",
+    "category_slug": "graph-search",
+    "name": "BFS",
+    "summary": "按层扩展，求无权图或网格的最短步数。",
+    "description_md": "BFS 用队列按层遍历，第一次到达某状态时就是最少步数。多源 BFS 可处理多个起点的最短距离。",
+    "difficulty": 2,
+    "prerequisites": ["队列", "图的基本表示"]
+  },
+  {
+    "slug": "dfs",
+    "category_slug": "graph-search",
+    "name": "DFS",
+    "summary": "沿路径深入，处理连通性、回溯与枚举。",
+    "description_md": "DFS 用递归或显式栈深入探索，适合连通块、环检测、回溯搜索和记忆化搜索。",
+    "difficulty": 2,
+    "prerequisites": ["递归", "图的基本表示"]
+  },
+  {
+    "slug": "dijkstra",
+    "category_slug": "graph-search",
+    "name": "Dijkstra",
+    "summary": "在非负边权图中求单源最短路。",
+    "description_md": "Dijkstra 用优先队列反复取出当前距离最小的节点并松弛出边；边权必须非负。",
+    "difficulty": 3,
+    "prerequisites": ["优先队列", "图的邻接表"]
+  },
+  {
+    "slug": "union-find",
+    "category_slug": "graph-search",
+    "name": "并查集",
+    "summary": "维护动态连通性与集合合并。",
+    "description_md": "并查集通过父指针、路径压缩与按秩合并支持近似 O(1) 的合并与查询。",
+    "difficulty": 3,
+    "prerequisites": ["数组", "树的父指针"]
+  },
+  {
+    "slug": "knapsack-01",
+    "category_slug": "dynamic-programming",
+    "name": "01 背包",
+    "summary": "每件物品最多选一次，在容量限制下最大化价值。",
+    "description_md": "01 背包的状态是前 i 件物品、容量 j 的最大价值；一维优化时容量必须倒序遍历。",
+    "difficulty": 3,
+    "prerequisites": ["动态规划基础", "二维状态"]
+  },
+  {
+    "slug": "lis",
+    "category_slug": "dynamic-programming",
+    "name": "最长上升子序列（LIS）",
+    "summary": "在保持顺序的前提下求最长严格上升子序列。",
+    "description_md": "LIS 可用 O(n^2) DP 理解状态，也可用贪心 + 二分维护 tails 数组做到 O(n log n)。",
+    "difficulty": 3,
+    "prerequisites": ["动态规划基础", "二分查找"]
+  }
+]
