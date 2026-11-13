@@ -162,13 +162,15 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .monaco-shell {
+  height: 100%;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
 }
 
 .monaco-host {
-  min-height: 320px;
+  height: 100%;
+  min-height: 0;
 }
 
 .vim-status {

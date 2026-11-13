@@ -268,6 +268,54 @@ async def test_correction_training_flow(
     assert body["status"] == "completed"
 
 
+async def test_draft_code_survives_and_resets_on_new_session(
+    seeded_client: AsyncClient,
+) -> None:
+    await _register(seeded_client)
+    task = await _task(seeded_client, "binary-search-template-001")
+    created = await seeded_client.post(
+        "/api/v1/sessions",
+        json={"task_id": task["id"], "mode": "free"},
+    )
+    session_id = created.json()["id"]
+    assert created.json()["draft_code"] is None
+
+    saved = await seeded_client.put(
+        f"/api/v1/sessions/{session_id}/draft",
+        json={"code": "int main() { /* draft */ }"},
+    )
+    assert saved.status_code == 200
+    assert saved.json()["draft_code"] == "int main() { /* draft */ }"
+    assert saved.json()["draft_saved_at"] is not None
+
+    reloaded = await seeded_client.get(f"/api/v1/sessions/{session_id}")
+    assert reloaded.json()["draft_code"] == "int main() { /* draft */ }"
+
+    submitted = await seeded_client.post(
+        f"/api/v1/sessions/{session_id}/answers",
+        json={"answer_payload": {"code": "int main() { return 0; }"}},
+    )
+    assert submitted.status_code == 200
+
+    completed = await seeded_client.post(
+        f"/api/v1/sessions/{session_id}/complete",
+        json={"mark_as_review": False},
+    )
+    assert completed.json()["submitted_code"] == "int main() { return 0; }"
+
+    blocked = await seeded_client.put(
+        f"/api/v1/sessions/{session_id}/draft",
+        json={"code": "late edit"},
+    )
+    assert blocked.status_code == 409
+
+    review = await seeded_client.post(
+        "/api/v1/sessions",
+        json={"task_id": task["id"], "mode": "review"},
+    )
+    assert review.json()["draft_code"] is None
+
+
 async def test_ai_review_returns_structured_verdict(
     seeded_client: AsyncClient,
     monkeypatch,

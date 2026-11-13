@@ -1140,6 +1140,77 @@ button {
   gap: 8px;
 }
 
+.answer-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.answer-toolbar-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.history-code {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding: 12px;
+  border: 1px solid var(--accent-line);
+  background: var(--accent-soft);
+}
+
+.history-code .code-block {
+  max-height: 260px;
+  margin: 0;
+  overflow: auto;
+  background: var(--surface-muted);
+}
+
+.editor-frame {
+  min-height: 320px;
+  overflow: hidden;
+}
+
+.editor-resizer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 14px;
+  margin-top: 6px;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.editor-resizer::before {
+  content: '';
+  width: 56px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-strong);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+.editor-resizer:hover::before,
+.editor-resizer:focus-visible::before {
+  background: var(--accent);
+}
+
+.editor-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  color: var(--text-subtle);
+  font-size: 11px;
+}
+
 .answer-options {
   display: grid;
   gap: var(--space-2);

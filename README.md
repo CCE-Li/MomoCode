@@ -141,9 +141,9 @@ docker compose down
 | 后端 Lint | `uv run ruff check .` | 通过 |
 | 后端格式 | `uv run ruff format --check .` | 通过 |
 | 后端类型 | `uv run mypy app` | 通过 |
-| 后端测试 | `uv run pytest` | 57 passed |
+| 后端测试 | `uv run pytest` | 60 passed |
 | 数据库/Redis | `docker compose up -d --wait` | PostgreSQL 16、Redis 7 healthy |
-| PostgreSQL 迁移 | `uv run alembic upgrade head` | `20261111_0009 (head)`；17 张表 |
+| PostgreSQL 迁移 | `uv run alembic upgrade head` | `20261112_0014 (head)`；17 张表 |
 | 内容导入 | `uv run python -m scripts.seed_content` | 3 分类、10 算法、40 技能、40 任务、81 条 task_skills |
 | 导入幂等 | 重复执行 seed | 检测到相同版本/checksum，跳过 |
 | 就绪检查 | `GET /health/ready` | `database: ok`, `redis: ok` |

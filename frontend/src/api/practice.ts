@@ -18,6 +18,9 @@ export const practiceApi = {
   getSession(sessionId: string): Promise<PracticeSession> {
     return api.get<PracticeSession>(`/sessions/${sessionId}`)
   },
+  saveDraft(sessionId: string, code: string): Promise<PracticeSession> {
+    return api.put<PracticeSession>(`/sessions/${sessionId}/draft`, { code })
+  },
   requestHint(
     sessionId: string,
     level: number,

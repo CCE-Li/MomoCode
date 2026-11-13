@@ -144,7 +144,19 @@ async def _session_response(
         hints_used=await _hints_used(session, row.id),
         self_assessment=row.self_assessment,
         auto_grade=row.auto_grade,
+        draft_code=row.draft_code,
+        draft_saved_at=row.draft_saved_at,
+        submitted_code=_submitted_code(row),
     )
+
+
+def _submitted_code(row: PracticeSession) -> str | None:
+    payload = row.answer_payload
+    if isinstance(payload, dict):
+        value = payload.get("code")
+        if isinstance(value, str):
+            return value
+    return None
 
 
 async def _result_response(
@@ -309,6 +321,27 @@ def _selected_skill_ids(payload: dict[str, object]) -> set[str]:
             status_code=422,
         )
     return set(raw)
+
+
+async def save_draft(
+    session: AsyncSession,
+    *,
+    user_id: UUID,
+    session_id: UUID,
+    code: str,
+) -> SessionResponse:
+    row = await get_session(session, user_id=user_id, session_id=session_id)
+    if row.status != "in_progress":
+        raise DomainError(
+            code="SESSION_STATE_CONFLICT",
+            message="当前会话状态不允许保存草稿。",
+            status_code=409,
+        )
+    row.draft_code = code
+    row.draft_saved_at = now_utc()
+    await session.commit()
+    await session.refresh(row)
+    return await _session_response(session, row)
 
 
 def _judge_cases(snapshot: dict[str, object]) -> tuple[list[JudgeCase], str | None]:

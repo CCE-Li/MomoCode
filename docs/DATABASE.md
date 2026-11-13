@@ -360,6 +360,8 @@ erDiagram
 | time_spent_ms | integer | 是 |  | CHECK >= 0 |
 | answer_payload | jsonb | 是 |  | 识别选择/代码/纠错结果；按训练类型校验 |
 | auto_grade | jsonb | 是 |  | 自动判题结果：result、passed、total、score、cases、compile_output |
+| draft_code | text | 是 |  | 未提交代码草稿；新 Session 为空 |
+| draft_saved_at | timestamptz | 是 |  | 草稿最近保存时间 |
 | self_assessment | text | 是 |  | 旧数据兼容；新编码提交不再写入 |
 | self_assessment_note | text | 是 |  | 旧数据兼容 |
 | max_hint_level | smallint | 否 | `0` | CHECK 0–5；由 hint 事件维护 |

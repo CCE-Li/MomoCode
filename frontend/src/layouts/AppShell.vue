@@ -62,6 +62,12 @@ const pageTitle = computed(() => {
   return typeof title === 'string' ? title : 'MomoCode'
 })
 
+const isDashboard = computed(() => route.name === 'dashboard')
+
+watch(isDashboard, (value) => {
+  if (!value) galaxyOpen.value = false
+})
+
 const userInitial = computed(() => {
   const name = auth.user?.displayName ?? auth.user?.email ?? 'M'
   return name.slice(0, 1).toUpperCase()
@@ -142,7 +148,7 @@ async function handleLogout(): Promise<void> {
 
         <div class="topbar-actions">
           <button
-            v-if="auth.isAuthenticated"
+            v-if="auth.isAuthenticated && isDashboard"
             class="btn btn-ghost galaxy-entry"
             type="button"
             aria-label="星图"
@@ -188,7 +194,7 @@ async function handleLogout(): Promise<void> {
       </main>
     </div>
 
-    <GalaxyPullDown v-model:open="galaxyOpen" />
+    <GalaxyPullDown v-if="isDashboard" v-model:open="galaxyOpen" />
   </div>
 </template>
 

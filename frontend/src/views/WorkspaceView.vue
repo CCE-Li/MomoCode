@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
+import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import LoadingState from '@/components/LoadingState.vue'
 import ErrorState from '@/components/ErrorState.vue'
@@ -53,7 +53,65 @@ const runResult = ref<RunTestsResult | null>(null)
 const aiReviewLoading = ref(false)
 const aiReviewError = ref<string | null>(null)
 const aiReview = ref<AiReviewResult | null>(null)
+const draftStatus = ref<'idle' | 'saving' | 'saved' | 'error'>('idle')
+const draftSavedAt = ref<string | null>(null)
+const pastCode = ref<string | null>(null)
+const pastCodeOpen = ref(false)
+const editorHeight = ref(readStoredHeight())
 let nextCaseId = 1
+let draftTimer: number | undefined
+let heightTimer: number | undefined
+
+const EDITOR_HEIGHT_KEY = 'momocode-editor-height'
+const MIN_EDITOR_HEIGHT = 320
+const MAX_EDITOR_HEIGHT = 1100
+
+function readStoredHeight(): number {
+  if (typeof window === 'undefined') return 560
+  const raw = Number(window.localStorage.getItem(EDITOR_HEIGHT_KEY))
+  if (!Number.isFinite(raw) || raw <= 0) return 560
+  return Math.min(MAX_EDITOR_HEIGHT, Math.max(MIN_EDITOR_HEIGHT, raw))
+}
+
+const editorStyle = computed(() => ({
+  height: `${editorHeight.value}px`,
+}))
+
+function resizeBy(delta: number): void {
+  editorHeight.value = Math.min(
+    MAX_EDITOR_HEIGHT,
+    Math.max(MIN_EDITOR_HEIGHT, editorHeight.value + delta),
+  )
+  window.localStorage.setItem(EDITOR_HEIGHT_KEY, String(editorHeight.value))
+}
+
+function startResize(event: PointerEvent): void {
+  event.preventDefault()
+  const startY = event.clientY
+  const startHeight = editorHeight.value
+  const target = event.currentTarget as HTMLElement | null
+  target?.setPointerCapture?.(event.pointerId)
+
+  function onMove(moveEvent: PointerEvent): void {
+    const next = Math.min(
+      MAX_EDITOR_HEIGHT,
+      Math.max(MIN_EDITOR_HEIGHT, startHeight + (moveEvent.clientY - startY)),
+    )
+    editorHeight.value = next
+  }
+
+  function onUp(): void {
+    window.removeEventListener('pointermove', onMove)
+    window.removeEventListener('pointerup', onUp)
+    if (heightTimer !== undefined) window.clearTimeout(heightTimer)
+    heightTimer = window.setTimeout(() => {
+      window.localStorage.setItem(EDITOR_HEIGHT_KEY, String(editorHeight.value))
+    }, 200)
+  }
+
+  window.addEventListener('pointermove', onMove)
+  window.addEventListener('pointerup', onUp)
+}
 
 const task = computed(() => session.value?.task ?? null)
 const isRecognition = computed(() => session.value?.training_type === 'recognition')
@@ -86,7 +144,10 @@ async function load(): Promise<void> {
       return
     }
     session.value = data
-    code.value = data.task.code_scaffold ?? ''
+    code.value = data.draft_code ?? data.task.code_scaffold ?? ''
+    draftSavedAt.value = data.draft_saved_at
+    draftStatus.value = data.draft_code ? 'saved' : 'idle'
+    pastCode.value = data.submitted_code ?? null
     selfAssessment.value = data.self_assessment ?? ''
     testCases.value = (data.task.sample_cases ?? []).map((item) => ({
       id: nextCaseId++,
@@ -160,6 +221,58 @@ function caseStatusLabel(status: string): string {
   if (status === 'runtime_error') return '运行错误'
   return status
 }
+
+function restoreTemplate(): void {
+  if (!task.value) return
+  code.value = task.value.code_scaffold ?? ''
+  draftStatus.value = 'idle'
+  void persistDraft()
+}
+
+function usePastCode(): void {
+  if (!pastCode.value) return
+  code.value = pastCode.value
+  pastCodeOpen.value = false
+  void persistDraft()
+}
+
+async function persistDraft(): Promise<void> {
+  if (!session.value || session.value.status !== 'in_progress') return
+  const snapshot = code.value
+  draftStatus.value = 'saving'
+  try {
+    const data = await practiceApi.saveDraft(sessionId.value, snapshot)
+    if (data.draft_code === snapshot) {
+      draftStatus.value = 'saved'
+      draftSavedAt.value = data.draft_saved_at
+    }
+  } catch {
+    draftStatus.value = 'error'
+  }
+}
+
+function scheduleDraftSave(): void {
+  if (draftTimer !== undefined) window.clearTimeout(draftTimer)
+  draftTimer = window.setTimeout(() => {
+    void persistDraft()
+  }, 700)
+}
+
+watch(code, (value, previous) => {
+  if (!session.value || session.value.status !== 'in_progress') return
+  if (value === previous) return
+  draftStatus.value = 'saving'
+  scheduleDraftSave()
+})
+
+onBeforeUnmount(() => {
+  if (draftTimer !== undefined) window.clearTimeout(draftTimer)
+  if (heightTimer !== undefined) window.clearTimeout(heightTimer)
+  window.localStorage.setItem(EDITOR_HEIGHT_KEY, String(editorHeight.value))
+  if (draftStatus.value === 'saving') {
+    void practiceApi.saveDraft(sessionId.value, code.value).catch(() => undefined)
+  }
+})
 
 async function runAiReview(): Promise<void> {
   aiReviewError.value = null
@@ -381,18 +494,52 @@ onMounted(load)
 
       <div class="workspace-answer">
         <section class="card" :class="{ 'workspace-answer-card': !isRecognition }">
-          <div class="topbar-actions" style="justify-content: space-between">
+          <div class="answer-toolbar">
             <h2>作答</h2>
-            <button
-              v-if="!isRecognition"
-              class="btn btn-ghost"
-              :class="{ 'is-active': vimEnabled }"
-              type="button"
-              :aria-pressed="vimEnabled"
-              @click="vimEnabled = !vimEnabled"
-            >
-              Vim 模式 {{ vimEnabled ? '开' : '关' }}
-            </button>
+            <div class="answer-toolbar-actions">
+              <span class="badge" :class="{ 'badge-success': draftStatus === 'saved' }">
+                <template v-if="draftStatus === 'saving'">保存中…</template>
+                <template v-else-if="draftStatus === 'saved'">草稿已保存</template>
+                <template v-else-if="draftStatus === 'error'">草稿保存失败</template>
+                <template v-else>自动保存已开启</template>
+              </span>
+              <template v-if="!isRecognition">
+                <button class="btn btn-ghost" type="button" @click="restoreTemplate">
+                  格式化（回到模板）
+                </button>
+                <button
+                  class="btn btn-ghost"
+                  type="button"
+                  :disabled="!pastCode"
+                  :title="pastCode ? '查看上一次提交的代码' : '暂无历史代码'"
+                  @click="pastCodeOpen = !pastCodeOpen"
+                >
+                  历史代码
+                </button>
+                <button
+                  class="btn btn-ghost"
+                  :class="{ 'is-active': vimEnabled }"
+                  type="button"
+                  :aria-pressed="vimEnabled"
+                  @click="vimEnabled = !vimEnabled"
+                >
+                  Vim {{ vimEnabled ? '开' : '关' }}
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div v-if="pastCodeOpen && pastCode" class="history-code">
+            <div class="topbar-actions" style="justify-content: space-between">
+              <strong>上一次提交的代码</strong>
+              <div class="answer-toolbar-actions">
+                <button class="btn btn-ghost" type="button" @click="usePastCode">填入编辑区</button>
+                <button class="btn btn-ghost" type="button" @click="pastCodeOpen = false">
+                  关闭
+                </button>
+              </div>
+            </div>
+            <pre class="code-block">{{ pastCode }}</pre>
           </div>
 
           <template v-if="isRecognition">
@@ -416,13 +563,33 @@ onMounted(load)
           </template>
 
           <template v-else>
-            <MonacoEditor
-              v-model="code"
-              language="cpp"
-              :theme="editorTheme"
-              :read-only="session.status !== 'in_progress'"
-              :vim-enabled="vimEnabled"
+            <div class="editor-frame" :style="editorStyle">
+              <MonacoEditor
+                v-model="code"
+                language="cpp"
+                :theme="editorTheme"
+                :read-only="session.status !== 'in_progress'"
+                :vim-enabled="vimEnabled"
+              />
+            </div>
+            <div
+              class="editor-resizer"
+              role="separator"
+              aria-orientation="horizontal"
+              aria-label="拖动调整编辑器高度"
+              tabindex="0"
+              :title="`编辑器高度 ${editorHeight}px`"
+              @pointerdown="startResize"
+              @keydown.up.prevent="resizeBy(-40)"
+              @keydown.down.prevent="resizeBy(40)"
             />
+
+            <div class="editor-meta">
+              <span>高度 {{ editorHeight }}px · 可拖动下方分隔条调整</span>
+              <span v-if="draftSavedAt">
+                草稿保存于 {{ new Date(draftSavedAt).toLocaleTimeString('zh-CN') }}
+              </span>
+            </div>
             <p style="color: var(--text-muted); margin-top: 12px">
               {{
                 needsSelfAssessment

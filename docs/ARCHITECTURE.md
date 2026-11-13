@@ -552,6 +552,7 @@ flowchart LR
 | Practice | `POST /sessions/{id}/complete` | 完成会话，可选标记正式复习 |
 | Practice | `POST /sessions/{id}/run` | 使用用户自定义/样例用例运行代码，不改变会话状态 |
 | Practice | `POST /sessions/{id}/ai-review` | LLM 基于题面与参考实现进行代码审查 |
+| Practice | `PUT /sessions/{id}/draft` | 保存未提交代码草稿（仅 in_progress） |
 | Practice | `GET /sessions/{id}/result` | 结果摘要 |
 | Review | `GET /reviews/due` | 到期队列 |
 | Review | `GET /reviews/today` | 今日复习摘要 |

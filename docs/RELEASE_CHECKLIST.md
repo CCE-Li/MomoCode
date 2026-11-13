@@ -112,13 +112,13 @@
 
 | 项 | 状态 | 说明 |
 |---|---|---|
-| 后端单元/集成测试 | ✅ | 57 passed |
+| 后端单元/集成测试 | ✅ | 60 passed |
 | 前端 Lint/类型/单测/构建 | ✅ | ESLint、vue-tsc、2 component tests、build |
 | 用户隔离 | ✅ | `test_isolation.py` |
 | CSRF | ✅ | 训练/OJ/Settings/登出写操作强制校验 |
 | 生产依赖审计 | ✅ | `npm audit --omit=dev` = 0 |
 | 开发依赖审计 | ⚠️ | 14 个 dev 告警（2 critical，Vitest/tinypool），生产不受影响 |
-| 迁移 | ✅ | 0001–0009 在 PostgreSQL 16 验证 |
+| 迁移 | ✅ | 0001–0014 在 PostgreSQL 16 验证 |
 | 种子导入 | ✅ | 幂等；`--force` 无重复 |
 | 备份/恢复 | ✅ | 130,798 bytes 备份；恢复后计数 10/40/40/81 |
 | 生产 Compose | ✅ | db/redis/api/web 全部 healthy |

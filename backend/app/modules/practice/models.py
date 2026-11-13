@@ -44,6 +44,8 @@ class PracticeSession(Base):
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     time_spent_ms: Mapped[int | None] = mapped_column(Integer)
     answer_payload: Mapped[dict[str, object] | None] = mapped_column(JSONBType)
+    draft_code: Mapped[str | None] = mapped_column(Text)
+    draft_saved_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     auto_grade: Mapped[dict[str, object] | None] = mapped_column(JSONBType)
     self_assessment: Mapped[str | None] = mapped_column(String(16))
     self_assessment_note: Mapped[str | None] = mapped_column(Text)

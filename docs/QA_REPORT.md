@@ -39,7 +39,7 @@ uv run pytest
 | Ruff | 通过 |
 | 格式 | 通过 |
 | mypy | 通过（59 source files） |
-| pytest | **57 passed** |
+| pytest | **60 passed** |
 
 测试文件：
 
@@ -102,7 +102,7 @@ uv run python -m scripts.seed_content
 
 | 项 | 结果 |
 |---|---|
-| 迁移链 | `0001 → 0009 (head)` |
+| 迁移链 | `0001 → 0014 (head)` |
 | 表数量 | 17 张业务/迁移表 |
 | 种子内容 | 3 分类、10 算法、40 技能、40 任务、81 条 task_skills |
 | 重复导入 | 相同 version/checksum 跳过 |

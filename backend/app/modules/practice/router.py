@@ -13,6 +13,7 @@ from app.modules.practice.schemas import (
     AiReviewResponse,
     AnswerRequest,
     CompleteRequest,
+    DraftRequest,
     HintRequest,
     HintResponse,
     ResultResponse,
@@ -92,6 +93,25 @@ async def submit_answer(
         user_id=user.id,
         session_id=session_id,
         payload=payload,
+    )
+
+
+@router.put(
+    "/{session_id}/draft",
+    response_model=SessionResponse,
+    dependencies=[Depends(require_csrf)],
+)
+async def save_draft(
+    session_id: UUID,
+    payload: DraftRequest,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_db_session),
+) -> SessionResponse:
+    return await service.save_draft(
+        session,
+        user_id=user.id,
+        session_id=session_id,
+        code=payload.code,
     )
 
 

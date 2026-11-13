@@ -16,6 +16,11 @@ test('register, train, analyze, and login again', async ({ page }) => {
     page.getByRole('heading', { name: '训练脉冲' }),
   ).toBeVisible()
   await expect(page.getByText('邮箱尚未验证')).toBeVisible()
+  await expect(
+    page.getByRole('heading', { name: '训练热力图' }),
+  ).toBeVisible()
+  await expect(page.locator('.heatmap-cell').first()).toBeVisible()
+  expect(await page.locator('.heatmap-cell').count()).toBeGreaterThan(300)
 
   await page.goto('/library')
   await expect(page.getByText('二分查找')).toBeVisible()

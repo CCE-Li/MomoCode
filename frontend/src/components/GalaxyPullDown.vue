@@ -14,33 +14,66 @@ import type { GalaxyResponse } from '@/types/galaxy'
 
 const GalaxyScene = defineAsyncComponent(() => import('./GalaxyScene.vue'))
 
+const RING_PX = 220
+const TWEEN_MS = 420
+const RING_CIRCUMFERENCE = 2 * Math.PI * 34
+const SCROLL_COOLDOWN_MS = 400
+
 const open = defineModel<boolean>('open', { default: false })
 
-const progress = ref(0)
-const dragging = ref(false)
-const settling = ref(false)
+const pull = ref(0)
+const viewportHeight = ref(
+  typeof window !== 'undefined' ? window.innerHeight : 800,
+)
 const atTop = ref(true)
+const dragging = ref(false)
+const closing = ref(false)
 const data = ref<GalaxyResponse | null>(null)
 const loading = ref(false)
 const error = ref<string | null>(null)
 const closeButton = ref<HTMLButtonElement | null>(null)
 
-const visible = computed(
-  () => open.value || progress.value > 0 || settling.value,
+const ringProgress = computed(() => clamp01(pull.value / RING_PX))
+const stage2 = computed(() =>
+  clamp01(
+    (pull.value - RING_PX) / Math.max(1, viewportHeight.value - RING_PX),
+  ),
+)
+const galaxyOpacity = computed(() => clamp01(stage2.value * 1.35))
+const ringOpacity = computed(() => {
+  if (closing.value || pull.value <= 0) return 0
+  return clamp01(Math.min(pull.value / 18, 1 - stage2.value))
+})
+const ringVisible = computed(() => ringOpacity.value > 0.01)
+const closeVisible = computed(() => open.value || pull.value > RING_PX)
+const sceneActive = computed(() => pull.value > 0)
+const ringOffset = computed(
+  () => RING_CIRCUMFERENCE * (1 - ringProgress.value),
+)
+const ringTop = computed(() => `${Math.max(52, pull.value / 2)}px`)
+const slideClip = computed(
+  () => `inset(0 0 ${Math.max(0, viewportHeight.value - pull.value)}px 0)`,
 )
 
-let startY = 0
-let startProgress = 0
-let settleTimer: number | undefined
-let lastLoadedAt = 0
+let suppressOpenWatch = false
+let tweenFrame = 0
 let wheelGesture = false
 let wheelTimer: number | undefined
+let startY = 0
+let startPull = 0
+let lastScrollAt = 0
+let lastLoadedAt = 0
+let bodyLocked = false
 let previousFocus: HTMLElement | null = null
 let previousBodyOverflow = ''
 let previousBodyPaddingRight = ''
 
 function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value))
+}
+
+function getShell(): HTMLElement | null {
+  return document.querySelector<HTMLElement>('.app-shell')
 }
 
 async function refresh(): Promise<void> {
@@ -62,6 +95,7 @@ function requestData(): void {
 }
 
 function lockBody(): void {
+  if (bodyLocked) return
   previousBodyOverflow = document.body.style.overflow
   previousBodyPaddingRight = document.body.style.paddingRight
   const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
@@ -69,11 +103,21 @@ function lockBody(): void {
   if (scrollbarWidth > 0) {
     document.body.style.paddingRight = `${scrollbarWidth}px`
   }
+  bodyLocked = true
 }
 
 function unlockBody(): void {
+  if (!bodyLocked) return
   document.body.style.overflow = previousBodyOverflow
   document.body.style.paddingRight = previousBodyPaddingRight
+  bodyLocked = false
+}
+
+function cancelTween(): void {
+  if (tweenFrame) {
+    cancelAnimationFrame(tweenFrame)
+    tweenFrame = 0
+  }
 }
 
 function cancelWheelGesture(): void {
@@ -84,38 +128,55 @@ function cancelWheelGesture(): void {
   }
 }
 
-function settleTo(target: boolean): void {
+function animateTo(target: number): void {
   cancelWheelGesture()
-  settling.value = true
-  if (target) {
-    if (!open.value) progress.value = 0.002
-    open.value = true
-    window.requestAnimationFrame(() => {
-      progress.value = 1
-    })
-  } else {
-    open.value = false
-    progress.value = 0
+  cancelTween()
+  const start = pull.value
+  if (Math.abs(target - start) < 0.5) {
+    pull.value = target
+    return
   }
-  if (settleTimer !== undefined) window.clearTimeout(settleTimer)
-  settleTimer = window.setTimeout(() => {
-    settling.value = false
-  }, 340)
+
+  const startedAt = performance.now()
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - startedAt) / TWEEN_MS)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    pull.value = start + (target - start) * eased
+    if (progress < 1) {
+      tweenFrame = requestAnimationFrame(step)
+    } else {
+      tweenFrame = 0
+    }
+  }
+  tweenFrame = requestAnimationFrame(step)
+}
+
+function requestOpen(value: boolean): void {
+  closing.value = !value && pull.value > 0
+  if (open.value !== value) {
+    suppressOpenWatch = true
+    open.value = value
+    void nextTick(() => {
+      suppressOpenWatch = false
+    })
+  }
+  animateTo(value ? viewportHeight.value : 0)
 }
 
 function close(): void {
-  settleTo(false)
+  requestOpen(false)
 }
 
 function startDrag(event: PointerEvent): void {
   if (event.button !== 0) return
   event.preventDefault()
+  cancelTween()
   cancelWheelGesture()
+  closing.value = false
   requestData()
   dragging.value = true
-  settling.value = false
   startY = event.clientY
-  startProgress = open.value ? 1 : progress.value
+  startPull = pull.value
   const handle = event.currentTarget
   if (handle instanceof HTMLElement) {
     handle.setPointerCapture?.(event.pointerId)
@@ -127,56 +188,54 @@ function startDrag(event: PointerEvent): void {
 
 function onPointerMove(event: PointerEvent): void {
   if (!dragging.value) return
-  const delta = (event.clientY - startY) / Math.max(1, window.innerHeight)
-  progress.value = clamp01(startProgress + delta)
+  pull.value = Math.max(
+    0,
+    Math.min(
+      viewportHeight.value,
+      startPull + (event.clientY - startY),
+    ),
+  )
 }
 
 function onPointerUp(): void {
   if (!dragging.value) return
   dragging.value = false
   window.removeEventListener('pointermove', onPointerMove)
-  const shouldOpen =
-    startProgress === 1 ? progress.value > 0.65 : progress.value > 0.3
-  settleTo(shouldOpen)
+  requestOpen(pull.value >= RING_PX)
 }
 
 function finishWheelGesture(): void {
   if (!wheelGesture) return
   wheelGesture = false
   wheelTimer = undefined
-
-  if (progress.value <= 0.001) {
-    open.value = false
-    progress.value = 0
-    settling.value = false
-    if (settleTimer !== undefined) {
-      window.clearTimeout(settleTimer)
-      settleTimer = undefined
-    }
-    return
-  }
-
-  settleTo(progress.value >= 0.3)
+  requestOpen(pull.value >= RING_PX)
 }
 
 function handleWheel(event: WheelEvent): void {
-  if (event.ctrlKey) return
-  if (open.value) return
+  if (event.ctrlKey || open.value) return
 
   if (!wheelGesture) {
-    if (window.scrollY > 0) return
-    if (event.deltaY >= 0) return
-    wheelGesture = true
-    settling.value = false
-    if (settleTimer !== undefined) {
-      window.clearTimeout(settleTimer)
-      settleTimer = undefined
+    if (window.scrollY > 0) {
+      lastScrollAt = performance.now()
+      return
     }
+    if (event.deltaY >= 0) return
+    if (
+      lastScrollAt > 0 &&
+      performance.now() - lastScrollAt < SCROLL_COOLDOWN_MS
+    ) {
+      lastScrollAt = performance.now()
+      return
+    }
+    wheelGesture = true
+    closing.value = false
+    cancelTween()
     requestData()
   }
 
-  progress.value = clamp01(
-    progress.value - event.deltaY / Math.max(1, window.innerHeight),
+  pull.value = Math.max(
+    0,
+    Math.min(viewportHeight.value, pull.value - event.deltaY),
   )
   event.preventDefault()
   event.stopPropagation()
@@ -190,154 +249,170 @@ function handleKey(event: KeyboardEvent): void {
 
 function handleScroll(): void {
   atTop.value = window.scrollY <= 2
+  lastScrollAt = performance.now()
 }
 
-watch(open, (value) => {
-  if (settling.value) return
-  if (value) {
-    requestData()
-    settleTo(true)
-  } else if (progress.value > 0) {
-    settleTo(false)
+function handleResize(): void {
+  viewportHeight.value = window.innerHeight
+  if (pull.value > viewportHeight.value) {
+    pull.value = viewportHeight.value
+  }
+}
+
+watch(pull, (value) => {
+  const shell = getShell()
+  if (shell) {
+    shell.style.transform = value > 0 ? `translateY(${value}px)` : ''
+    shell.style.willChange = value > 0 ? 'transform' : ''
+  }
+  if (value > 0) lockBody()
+  else {
+    unlockBody()
+    closing.value = false
   }
 })
 
-watch(visible, async (value) => {
+watch(open, async (value) => {
+  const shell = getShell()
+  if (shell) {
+    shell.toggleAttribute('inert', value)
+    if (value) shell.setAttribute('aria-hidden', 'true')
+    else shell.removeAttribute('aria-hidden')
+  }
+
+  if (!suppressOpenWatch) {
+    closing.value = !value
+    animateTo(value ? viewportHeight.value : 0)
+  }
+
   if (value) {
     previousFocus =
       document.activeElement instanceof HTMLElement ? document.activeElement : null
-    lockBody()
     await nextTick()
     closeButton.value?.focus()
   } else {
-    unlockBody()
     previousFocus?.focus()
+    previousFocus = null
   }
 })
 
 onMounted(() => {
-  handleScroll()
+  atTop.value = window.scrollY <= 2
+  void refresh()
+  void import('./GalaxyScene.vue')
   window.addEventListener('wheel', handleWheel, {
     passive: false,
     capture: true,
   })
   window.addEventListener('scroll', handleScroll, { passive: true })
+  window.addEventListener('resize', handleResize, { passive: true })
   window.addEventListener('keydown', handleKey)
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('wheel', handleWheel, true)
   window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('resize', handleResize)
   window.removeEventListener('keydown', handleKey)
   window.removeEventListener('pointermove', onPointerMove)
-  if (settleTimer !== undefined) window.clearTimeout(settleTimer)
+  cancelTween()
   cancelWheelGesture()
-  if (visible.value) unlockBody()
+  const shell = getShell()
+  if (shell) {
+    shell.style.transform = ''
+    shell.style.willChange = ''
+    shell.removeAttribute('inert')
+    shell.removeAttribute('aria-hidden')
+  }
+  unlockBody()
 })
 </script>
 
 <template>
   <Teleport to="body">
-    <div v-if="visible" class="galaxy-backdrop" @click="close"></div>
-
     <div
-      v-if="visible"
-      class="galaxy-curtain"
-      :class="{ 'is-settling': settling }"
-      :style="{
-        clipPath: `inset(0 0 ${(1 - progress) * 100}% 0)`,
-        maskImage: `linear-gradient(to bottom, black 0%, black calc(${progress * 100}% - 14%), transparent ${progress * 100}%)`,
-        WebkitMaskImage: `linear-gradient(to bottom, black 0%, black calc(${progress * 100}% - 14%), transparent ${progress * 100}%)`,
-      }"
+      class="galaxy-scene-layer"
+      :style="{ opacity: galaxyOpacity, clipPath: slideClip }"
+      :aria-hidden="!open"
       role="dialog"
       aria-modal="true"
       aria-label="记忆星图"
     >
-      <div class="galaxy-curtain-scene">
-        <Suspense v-if="data">
-          <GalaxyScene
-            :skills="data.skills"
-            :progress="data.progress"
-            :active="visible"
-          />
-          <template #fallback>
-            <div class="galaxy-curtain-loading"><span class="galaxy-pulse"></span></div>
-          </template>
-        </Suspense>
-        <div v-else class="galaxy-curtain-loading">
-          <span v-if="loading" class="galaxy-pulse"></span>
-          <button
-            v-else
-            class="galaxy-retry"
-            type="button"
-            aria-label="重试加载星图"
-            @click="refresh"
-          >
-            ↻
-          </button>
-        </div>
+      <Suspense v-if="data">
+        <GalaxyScene
+          :skills="data.skills"
+          :progress="data.progress"
+          :active="sceneActive"
+        />
+        <template #fallback>
+          <div class="galaxy-stage-loading"><span class="galaxy-pulse"></span></div>
+        </template>
+      </Suspense>
+      <div v-else class="galaxy-stage-loading">
+        <span v-if="loading" class="galaxy-pulse"></span>
+        <button
+          v-else
+          class="galaxy-retry"
+          type="button"
+          aria-label="重试加载星图"
+          @click="refresh"
+        >
+          ↻
+        </button>
       </div>
+    </div>
 
-      <div class="galaxy-fade galaxy-fade-left" aria-hidden="true"></div>
-      <div class="galaxy-fade galaxy-fade-right" aria-hidden="true"></div>
-
-      <div class="galaxy-close-zone" aria-hidden="true" @click="close"></div>
-
-      <button
-        ref="closeButton"
-        class="galaxy-close"
-        type="button"
-        aria-label="收起星图"
-        @click="close"
-      >
-        ✕
-      </button>
+    <div
+      v-if="ringVisible"
+      class="galaxy-ring"
+      :style="{ opacity: ringOpacity, top: ringTop }"
+      aria-hidden="true"
+    >
+      <svg viewBox="0 0 80 80">
+        <circle class="galaxy-ring-track" cx="40" cy="40" r="34" />
+        <circle
+          class="galaxy-ring-value"
+          cx="40"
+          cy="40"
+          r="34"
+          :style="{ strokeDashoffset: ringOffset }"
+        />
+      </svg>
     </div>
 
     <button
-      v-if="atTop || visible"
+      v-if="closeVisible"
+      ref="closeButton"
+      class="galaxy-close"
+      type="button"
+      aria-label="收起星图"
+      @click="close"
+    >
+      ✕
+    </button>
+
+    <button
+      v-if="atTop && !open"
       class="galaxy-handle"
-      :class="{ 'is-dragging': dragging, 'is-settling': settling }"
       type="button"
       aria-label="向下拉动打开星图"
       :aria-expanded="open"
-      :style="{
-        top: `calc(${progress * 100}vh + ${(1 - progress) * 9}px)`,
-      }"
       @pointerdown="startDrag"
     ></button>
   </Teleport>
 </template>
 
 <style scoped>
-.galaxy-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 69;
-  background: oklch(0.05 0.005 260 / 0.5);
-  backdrop-filter: blur(18px) saturate(0.65);
-  cursor: pointer;
-}
-
-.galaxy-curtain {
+.galaxy-scene-layer {
   position: fixed;
   inset: 0;
   z-index: 70;
   overflow: hidden;
   background: #06070b;
-  will-change: clip-path;
+  will-change: clip-path, opacity;
 }
 
-.galaxy-curtain.is-settling {
-  transition: clip-path 300ms var(--ease-out);
-}
-
-.galaxy-curtain-scene {
-  position: absolute;
-  inset: 0;
-}
-
-.galaxy-curtain-loading {
+.galaxy-stage-loading {
   display: grid;
   place-content: center;
   justify-items: center;
@@ -385,11 +460,47 @@ onBeforeUnmount(() => {
   color: var(--accent);
 }
 
+.galaxy-ring {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 90;
+  width: 96px;
+  height: 96px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: drop-shadow(0 0 8px color-mix(in oklch, var(--accent) 45%, transparent));
+}
+
+.galaxy-ring svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.galaxy-ring-track {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 3;
+  opacity: 0.35;
+}
+
+.galaxy-ring-value {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 213.628;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  transition: stroke-dashoffset 80ms linear;
+}
+
 .galaxy-close {
   position: fixed;
   top: 18px;
   right: 20px;
-  z-index: 3;
+  z-index: 91;
   display: grid;
   place-items: center;
   width: 36px;
@@ -413,40 +524,6 @@ onBeforeUnmount(() => {
   color: var(--accent);
 }
 
-.galaxy-fade {
-  position: absolute;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.galaxy-fade-left,
-.galaxy-fade-right {
-  top: 0;
-  bottom: 0;
-  width: 18%;
-}
-
-.galaxy-fade-left {
-  left: 0;
-  background: linear-gradient(90deg, #06070b 0%, transparent 100%);
-}
-
-.galaxy-fade-right {
-  right: 0;
-  background: linear-gradient(270deg, #06070b 0%, transparent 100%);
-}
-
-.galaxy-close-zone {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 2;
-  height: 160px;
-  cursor: pointer;
-  pointer-events: auto;
-}
-
 .galaxy-handle {
   position: fixed;
   top: 0;
@@ -458,15 +535,17 @@ onBeforeUnmount(() => {
   border: 0;
   background: transparent;
   cursor: grab;
-  transform: translateY(-50%);
   touch-action: none;
 }
 
-.galaxy-handle.is-settling {
-  transition: top 300ms var(--ease-out);
+.galaxy-handle:active {
+  cursor: grabbing;
 }
 
-.galaxy-handle.is-dragging {
-  cursor: grabbing;
+@media (max-width: 767px) {
+  .galaxy-ring {
+    width: 76px;
+    height: 76px;
+  }
 }
 </style>

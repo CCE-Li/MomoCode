@@ -88,6 +88,9 @@ export interface PracticeSession {
   hints_used: HintUsed[]
   self_assessment: SelfAssessment | null
   auto_grade: AutoGrade | null
+  draft_code: string | null
+  draft_saved_at: string | null
+  submitted_code: string | null
 }
 
 export interface PracticeResult extends PracticeSession {

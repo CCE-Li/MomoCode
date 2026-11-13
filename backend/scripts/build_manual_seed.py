@@ -611,9 +611,7 @@ def build_seed(manual_text: str) -> SeedBundle:
             )
             tasks.setdefault(task.slug, task)
 
-    skill_to_algorithm = {
-        skill.slug: skill.algorithm_slug for skill in skills.values()
-    }
+    skill_to_algorithm = {skill.slug: skill.algorithm_slug for skill in skills.values()}
     algorithm_names = {algorithm.slug: algorithm.name for algorithm in algorithms.values()}
     for task in tasks.values():
         tags: list[str] = []

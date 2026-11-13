@@ -352,6 +352,10 @@ function updateProgress(progress: number): void {
   progressMesh = mesh
 }
 
+function renderFrame(): void {
+  if (renderer && scene && camera) renderer.render(scene, camera)
+}
+
 function animate(now: number): void {
   frame = requestAnimationFrame(animate)
   const delta = Math.min(0.05, (now - lastTime) / 1000)
@@ -477,6 +481,7 @@ function init(): void {
   resize()
 
   if (props.active) start()
+  else renderFrame()
   document.addEventListener('visibilitychange', handleVisibility)
 
   observer = new ResizeObserver(() => resize())
@@ -487,12 +492,18 @@ onMounted(init)
 
 watch(
   () => props.skills,
-  () => buildSceneContent(),
+  () => {
+    buildSceneContent()
+    if (!props.active) renderFrame()
+  },
 )
 
 watch(
   () => props.progress,
-  (value) => updateProgress(value),
+  (value) => {
+    updateProgress(value)
+    if (!props.active) renderFrame()
+  },
 )
 
 watch(

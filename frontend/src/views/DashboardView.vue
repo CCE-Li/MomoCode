@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import ActivityHeatmap from '@/components/ActivityHeatmap.vue'
 import StatCard from '@/components/StatCard.vue'
+import { analyticsApi } from '@/api/analytics'
 import { catalogApi } from '@/api/catalog'
+import { getApiErrorMessage } from '@/api/client'
 import { reviewApi } from '@/api/review'
 import { useAuthStore } from '@/stores/auth'
+import type { TrendPoint } from '@/types/analytics'
 import type { TodayReview } from '@/types/review'
 
 const auth = useAuthStore()
@@ -12,6 +16,22 @@ const contentSummary = ref('—')
 const algorithmCount = ref(0)
 const taskCount = ref(0)
 const today = ref<TodayReview | null>(null)
+const heatmapPoints = ref<TrendPoint[]>([])
+const heatmapLoading = ref(true)
+const heatmapError = ref<string | null>(null)
+
+async function loadHeatmap(): Promise<void> {
+  heatmapLoading.value = true
+  heatmapError.value = null
+  try {
+    const data = await analyticsApi.trends(365)
+    heatmapPoints.value = data.points
+  } catch (err) {
+    heatmapError.value = getApiErrorMessage(err)
+  } finally {
+    heatmapLoading.value = false
+  }
+}
 
 const trainingTypes = [
   {
@@ -49,6 +69,8 @@ const todayLabel = computed(() =>
 )
 
 onMounted(async () => {
+  void loadHeatmap()
+
   try {
     const [algorithms, tasks] = await Promise.all([
       catalogApi.algorithms(),
@@ -129,6 +151,22 @@ onMounted(async () => {
       :hint="`${algorithmCount} 个算法 · 40 个技能`"
     />
   </div>
+
+  <section class="card" style="margin-top: 16px">
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">训练记录</span>
+        <h2>训练热力图</h2>
+      </div>
+      <span class="badge">过去一年</span>
+    </div>
+    <div v-if="heatmapLoading" class="stat-hint">正在加载训练记录…</div>
+    <div v-else-if="heatmapError" class="notice" role="alert">
+      {{ heatmapError }}
+      <button class="btn btn-ghost" type="button" @click="loadHeatmap">重试</button>
+    </div>
+    <ActivityHeatmap v-else :points="heatmapPoints" />
+  </section>
 
   <section class="card training-section">
     <div class="section-heading">

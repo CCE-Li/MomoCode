@@ -2,9 +2,7 @@ import { expect, test } from '@playwright/test'
 
 const password = 'correct horse battery'
 
-test('galaxy curtain pulls down from the header and fills the viewport', async ({
-  page,
-}) => {
+test('galaxy slides the page down behind a ring and takes over', async ({ page }) => {
   const email = `galaxy-e2e-${Date.now()}@example.com`
 
   await page.goto('/register')
@@ -24,20 +22,32 @@ test('galaxy curtain pulls down from the header and fills the viewport', async (
   await page.mouse.move(640, 420, { steps: 12 })
   await page.mouse.up()
   await expect(dialog).toBeVisible()
+  await page.waitForTimeout(520)
 
   const box = await dialog.boundingBox()
   expect(box?.width).toBeGreaterThan(1200)
   expect(box?.height).toBeGreaterThan(650)
 
-  await page.mouse.click(640, 690)
+  await page.getByRole('button', { name: '收起星图' }).click()
   await expect(dialog).toBeHidden()
+  await page.waitForTimeout(520)
 
+  await page.evaluate(() => {
+    window.scrollTo(0, document.body.scrollHeight)
+    window.scrollTo(0, 0)
+  })
   await page.mouse.move(640, 300)
+  await page.mouse.wheel(0, -200)
+  await expect(dialog).toBeHidden()
+  await page.waitForTimeout(450)
+
   await page.mouse.wheel(0, -360)
   await expect(dialog).toBeVisible()
+  await page.waitForTimeout(520)
 
   await page.getByRole('button', { name: '收起星图' }).click()
   await expect(dialog).toBeHidden()
+  await page.waitForTimeout(520)
 
   await trigger.click()
   await expect(dialog).toBeVisible()

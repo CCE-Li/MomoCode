@@ -92,6 +92,10 @@ class TaskView(BaseModel):
     sample_cases: list[dict[str, str]] = Field(default_factory=list)
 
 
+class DraftRequest(BaseModel):
+    code: str = Field(max_length=200000)
+
+
 class SessionResponse(BaseModel):
     id: UUID
     task: TaskView
@@ -107,6 +111,9 @@ class SessionResponse(BaseModel):
     hints_used: list[HintUsed]
     self_assessment: str | None
     auto_grade: dict[str, object] | None
+    draft_code: str | None = None
+    draft_saved_at: datetime | None = None
+    submitted_code: str | None = None
 
 
 class ResultResponse(SessionResponse):
