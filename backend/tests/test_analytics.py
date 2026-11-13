@@ -70,10 +70,11 @@ async def test_forgetting_curve_shape(seeded_client: AsyncClient) -> None:
     body = response.json()
     assert body["horizon_days"] == 30
     assert len(body["points"]) == 31
-    assert body["fibonacci_review_days"] == [1, 2, 4, 7, 12, 20]
     assert body["sample_size"] == 0
-    assert body["points"][0]["fibonacci_retention"] == 1.0
+    assert body["points"][0]["ebbinghaus_retention"] == 1.0
     assert body["points"][0]["my_retention"] is None
+    assert round(body["points"][1]["ebbinghaus_retention"], 3) == 0.337
+    assert round(body["points"][6]["ebbinghaus_retention"], 3) == 0.254
 
 
 async def test_analytics_overview_trends_and_skills(seeded_client: AsyncClient) -> None:

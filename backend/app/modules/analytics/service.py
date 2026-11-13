@@ -1,4 +1,3 @@
-import math
 import statistics
 from collections import defaultdict
 from datetime import UTC, datetime, timedelta
@@ -450,12 +449,39 @@ async def skills(
 
 FSRS_FACTOR = 0.9803464944134797
 FSRS_DECAY = -0.1542
-FIBONACCI_INTERVALS = [1, 1, 2, 3, 5, 8, 13, 21]
-FIBONACCI_STABILITY_DAYS = 1.5
+EBBINGHAUS_CURVE: tuple[tuple[float, float], ...] = (
+    (0.0, 1.0),
+    (20 / 1440, 0.582),
+    (1 / 24, 0.442),
+    (8.8 / 24, 0.358),
+    (1.0, 0.337),
+    (2.0, 0.278),
+    (6.0, 0.254),
+    (31.0, 0.211),
+)
 
 
-def _fibonacci_retention(days_since_review: float) -> float:
-    return max(0.0, min(1.0, math.exp(-max(0.0, days_since_review) / FIBONACCI_STABILITY_DAYS)))
+def _ebbinghaus_retention(days_since_learning: float) -> float:
+    day = max(0.0, days_since_learning)
+    for (start_day, start_ret), (end_day, end_ret) in zip(
+        EBBINGHAUS_CURVE,
+        EBBINGHAUS_CURVE[1:],
+        strict=False,
+    ):
+        if day <= end_day:
+            span = end_day - start_day
+            ratio = (day - start_day) / span if span > 0 else 0.0
+            return max(0.0, min(1.0, start_ret + (end_ret - start_ret) * ratio))
+
+    last_day, last_ret = EBBINGHAUS_CURVE[-1]
+    if day <= last_day:
+        return last_ret
+    value: float = float(last_ret) * float(last_day / day) ** 0.08
+    if value > 1.0:
+        return 1.0
+    if value < 0.0:
+        return 0.0
+    return value
 
 
 def _retrievability(day: float, stability: float) -> float:
@@ -470,12 +496,6 @@ async def forgetting_curve(
     user_id: UUID,
     horizon_days: int,
 ) -> ForgettingCurveResponse:
-    review_days: list[int] = []
-    total = 0
-    for interval in FIBONACCI_INTERVALS:
-        total += interval
-        review_days.append(total)
-
     stabilities = [
         float(value)
         for value in (
@@ -491,30 +511,29 @@ async def forgetting_curve(
     ]
     avg_stability = statistics.mean(stabilities) if stabilities else None
 
-    points: list[ForgettingCurvePoint] = []
-    for day in range(horizon_days + 1):
-        last_review = max((item for item in review_days if item <= day), default=0)
-        points.append(
-            ForgettingCurvePoint(
-                day=day,
-                fibonacci_retention=_fibonacci_retention(day - last_review),
-                my_retention=(
-                    _retrievability(day, avg_stability) if avg_stability is not None else None
-                ),
-            )
+    points: list[ForgettingCurvePoint] = [
+        ForgettingCurvePoint(
+            day=day,
+            ebbinghaus_retention=_ebbinghaus_retention(day),
+            my_retention=(
+                _retrievability(day, avg_stability)
+                if avg_stability is not None
+                else None
+            ),
         )
+        for day in range(horizon_days + 1)
+    ]
 
     return ForgettingCurveResponse(
         horizon_days=horizon_days,
         sample_size=len(stabilities),
         insufficient_data=len(stabilities) < 3,
         avg_stability_days=avg_stability,
-        fibonacci_intervals=FIBONACCI_INTERVALS,
-        fibonacci_review_days=[item for item in review_days if item <= horizon_days],
         points=points,
         notes=(
-            "Fibonacci 计划按 1/1/2/3/5/8/13/21 天复习，使用 1.5 天稳定度的指数遗忘；"
-            "我的曲线取当前技能 FSRS 稳定度均值。"
+            "艾宾浩斯遗忘曲线基于经典保持率数据（20 分钟 58.2%、1 小时 44.2%、"
+            "8.8 小时 35.8%、1 天 33.7%、2 天 27.8%、6 天 25.4%、31 天 21.1%）"
+            "分段插值；我的曲线取当前技能 FSRS 稳定度均值。"
         ),
     )
 

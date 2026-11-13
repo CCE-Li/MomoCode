@@ -10,6 +10,7 @@ import { catalogApi } from '@/api/catalog'
 import { practiceApi } from '@/api/practice'
 import { getApiErrorMessage } from '@/api/client'
 import { useTheme } from '@/composables/useTheme'
+import { buildSkillIndex, matchesSkillQuery } from '@/lib/skillSearch'
 import type {
   AiReviewResult,
   PracticeSession,
@@ -31,6 +32,30 @@ const MonacoEditor = defineAsyncComponent({
 const sessionId = computed(() => String(route.params.sessionId ?? ''))
 const session = ref<PracticeSession | null>(null)
 const recognitionSkills = ref<SkillSummary[]>([])
+const skillQuery = ref('')
+const skillIndex = computed(() =>
+  buildSkillIndex(
+    recognitionSkills.value.map((skill) => ({
+      skill,
+      name: skill.name,
+      algorithmName: skill.algorithm_name,
+      slug: skill.slug,
+      algorithmSlug: skill.algorithm_slug,
+    })),
+  ),
+)
+const filteredRecognitionSkills = computed(() => {
+  const query = skillQuery.value.trim()
+  if (!query) return recognitionSkills.value
+  return skillIndex.value
+    .filter((entry) => matchesSkillQuery(entry, query))
+    .map((entry) => entry.item.skill)
+})
+const selectedSkillNames = computed(() =>
+  recognitionSkills.value
+    .filter((skill) => selectedSkillIds.value.includes(skill.id))
+    .map((skill) => skill.name),
+)
 const loading = ref(true)
 const error = ref<string | null>(null)
 const answerError = ref<string | null>(null)
@@ -544,10 +569,42 @@ onMounted(load)
 
           <template v-if="isRecognition">
             <p style="color: var(--text-muted); margin-top: 4px">
-              选择你认为适用的算法/技能，可多选。
+              选择你认为适用的算法/技能，可多选。支持中文、拼音、首字母缩写与英文搜索。
             </p>
-            <div class="answer-options answer-options-wide" style="margin-top: 12px">
-              <label v-for="skill in recognitionSkills" :key="skill.id" class="answer-option">
+
+            <div class="skill-search">
+              <input
+                id="recognition-skill-search"
+                v-model="skillQuery"
+                type="search"
+                placeholder="搜索：二分 / erfen / efc / binary"
+                aria-label="搜索算法或技能"
+              />
+              <span class="skill-search-count">
+                {{ filteredRecognitionSkills.length }} / {{ recognitionSkills.length }}
+              </span>
+            </div>
+
+            <div v-if="selectedSkillNames.length" class="skill-selected">
+              <span class="stat-label">已选</span>
+              <span v-for="name in selectedSkillNames" :key="name" class="badge badge-accent">
+                {{ name }}
+              </span>
+            </div>
+
+            <div
+              v-if="filteredRecognitionSkills.length === 0"
+              class="notice"
+              style="margin-top: 10px"
+            >
+              没有匹配的算法/技能，试试中文、拼音或英文关键词。
+            </div>
+            <div v-else class="answer-options answer-options-wide skill-option-list">
+              <label
+                v-for="skill in filteredRecognitionSkills"
+                :key="skill.id"
+                class="answer-option"
+              >
                 <input
                   type="checkbox"
                   :value="skill.id"

@@ -148,9 +148,10 @@ docker compose down
 | 导入幂等 | 重复执行 seed | 检测到相同版本/checksum，跳过 |
 | 就绪检查 | `GET /health/ready` | `database: ok`, `redis: ok` |
 | 认证闭环 | 真实 API smoke test | 注册 201 → me 200 → logout 204 → me 401 → login 200 |
+| 识别训练 | 浏览器 | 中文模糊 / 全拼 / 首字母缩写 / 英文 slug 搜索，选择后即时判分 |
 | FSRS 闭环 | 真实 API smoke test | 正式复习 → 下次复习时间；逾期队列返回 |
 | OJ 手动关联 | 真实 API smoke test | 创建账号/提交/去重/关联 Session |
-| Analytics | 真实 API + 浏览器 | KPI、趋势、错误分布、Skill Score、样本不足、Fibonacci vs 我的遗忘曲线 |
+| Analytics | 真实 API + 浏览器 | KPI、趋势、错误分布、Skill Score、样本不足、艾宾浩斯 vs 我的遗忘曲线 |
 | 测试运行 | 真实 API + 浏览器 | 题目样例用例 + 自定义输入/期望输出 + Docker 运行结果 |
 | 模板/变体/纠错训练 | 真实 API + 浏览器 | Monaco + Vim 模式、提交后 Docker 自动判题、结果页展示测试用例 |
 | AI 判题 | 真实 API + 浏览器 | 题面 + 参考实现 + 用户代码 → LLM 结论/问题/建议；需配置 `LLM_API_KEY` |

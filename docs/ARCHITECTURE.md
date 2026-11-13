@@ -564,7 +564,7 @@ flowchart LR
 | Analytics | `GET /analytics/skills` | 技能维度 |
 | Analytics | `GET /analytics/trends` | 趋势 |
 | Analytics | `GET /analytics/errors` | 错误分布 |
-| Analytics | `GET /analytics/forgetting-curve` | Fibonacci 计划 vs 个人 FSRS 遗忘曲线 |
+| Analytics | `GET /analytics/forgetting-curve` | 艾宾浩斯遗忘曲线 vs 个人 FSRS 遗忘曲线 |
 | Settings | `GET/PATCH /settings/profile` | 资料与时区 |
 | Settings | `GET/PATCH /settings/review` | 复习偏好与每日上限 |
 | Health | `GET /health/live` | 进程存活 |

@@ -34,7 +34,7 @@ export interface Trends {
 
 export interface ForgettingCurvePoint {
   day: number
-  fibonacci_retention: number
+  ebbinghaus_retention: number
   my_retention: number | null
 }
 
@@ -43,8 +43,6 @@ export interface ForgettingCurve {
   sample_size: number
   insufficient_data: boolean
   avg_stability_days: number | null
-  fibonacci_intervals: number[]
-  fibonacci_review_days: number[]
   points: ForgettingCurvePoint[]
   notes: string
 }

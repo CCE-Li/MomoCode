@@ -95,7 +95,7 @@ class GalaxyResponse(BaseModel):
 
 class ForgettingCurvePoint(BaseModel):
     day: int
-    fibonacci_retention: float
+    ebbinghaus_retention: float
     my_retention: float | None
 
 
@@ -104,7 +104,5 @@ class ForgettingCurveResponse(BaseModel):
     sample_size: int
     insufficient_data: bool
     avg_stability_days: float | None
-    fibonacci_intervals: list[int]
-    fibonacci_review_days: list[int]
     points: list[ForgettingCurvePoint]
     notes: str

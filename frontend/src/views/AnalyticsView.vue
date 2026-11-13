@@ -207,8 +207,10 @@ const forgettingOption = computed<EChartsOption>(() => {
     textStyle: { color: chartText.value },
     tooltip: { trigger: 'axis', ...tooltipStyle.value },
     legend: {
-      data: ['Fibonacci 计划', '我的曲线'],
+      data: ['艾宾浩斯曲线', '我的曲线'],
       textStyle: { color: chartText.value },
+      top: 0,
+      left: 'center',
     },
     grid: { left: 48, right: 24, top: 42, bottom: 36 },
     xAxis: {
@@ -228,21 +230,12 @@ const forgettingOption = computed<EChartsOption>(() => {
     },
     series: [
       {
-        name: 'Fibonacci 计划',
+        name: '艾宾浩斯曲线',
         type: 'line',
-        smooth: false,
+        smooth: true,
         showSymbol: false,
-        data: points.map((point) => Number((point.fibonacci_retention * 100).toFixed(1))),
+        data: points.map((point) => Number((point.ebbinghaus_retention * 100).toFixed(1))),
         lineStyle: { width: 2 },
-        markLine: {
-          silent: true,
-          symbol: 'none',
-          label: { show: false },
-          lineStyle: { color: chartGrid.value, type: 'dashed' },
-          data: (curve?.fibonacci_review_days ?? []).map((day) => ({
-            xAxis: day,
-          })),
-        },
       },
       {
         name: '我的曲线',
@@ -308,10 +301,9 @@ const forgettingOption = computed<EChartsOption>(() => {
           <span class="eyebrow">Memory decay</span>
           <h2>遗忘曲线对比</h2>
         </div>
-        <span class="badge"> Fibonacci vs 我的 FSRS </span>
+        <span class="badge"> 艾宾浩斯 vs 我的 FSRS </span>
       </div>
       <div class="topbar-actions" style="margin-top: 12px; flex-wrap: wrap">
-        <span class="badge"> Fibonacci：{{ forgetting?.fibonacci_intervals.join(' / ') }} 天 </span>
         <span class="badge">样本技能 {{ forgetting?.sample_size ?? 0 }}</span>
         <span class="badge">
           我的平均稳定度
@@ -321,8 +313,8 @@ const forgettingOption = computed<EChartsOption>(() => {
         </span>
       </div>
       <p style="color: var(--text-muted); margin-top: 10px">
-        Fibonacci 计划按 1/1/2/3/5/8/13/21 天复习，虚线为复习节点；我的曲线取当前技能 FSRS
-        稳定度均值。样本不足时仅作参考。
+        艾宾浩斯曲线基于经典保持率数据（20 分钟、1 小时、1 天、2 天、6 天、31 天）分段插值；我的曲线取当前技能
+        FSRS 稳定度均值。样本不足时仅作参考。
       </p>
       <EChart v-if="forgetting?.points.length" :option="forgettingOption" height="320px" />
       <p v-else style="color: var(--text-subtle); margin-top: 12px">暂无个人遗忘曲线数据。</p>
